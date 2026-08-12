@@ -4,180 +4,378 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AurumFlux — infrastructure for when software acts on the world</title>
-<meta name="description" content="Open-source retry-safety and idempotency tooling for AI agents, plus compliance products. Every claim here is verifiable.">
+<meta name="description" content="Exactly-once infrastructure for AI agents. Open-source retry-safety tooling, plus compliance products. Every claim verifiable.">
 <meta property="og:title" content="AurumFlux">
-<meta property="og:description" content="Infrastructure for when software acts on the world. Exactly once, with proof.">
+<meta property="og:description" content="Infrastructure for when software acts on the world. Exactly once — with proof.">
 <meta property="og:image" content="https://aurumflux20.github.io/logo.png">
+<meta name="theme-color" content="#08090b">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
 <style>
   :root{
-    --bg:#0b0d10; --fg:#e9ecef; --dim:#8c959f; --line:#1c222a; --card:#111519;
-    --gold:#d4a24c; --ok:#3fb950; --accent:#58a6ff;
-  }
-  @media (prefers-color-scheme: light){
-    :root{ --bg:#fff; --fg:#16191d; --dim:#5b6570; --line:#e6eaee; --card:#f7f9fb; --gold:#a97c22; }
+    --bg:#08090b;
+    --bg-2:#0c0e12;
+    --fg:#f2f4f7;
+    --dim:#8a929c;
+    --faint:#5a626c;
+    --line:rgba(255,255,255,.075);
+    --line-2:rgba(255,255,255,.14);
+    --card:rgba(255,255,255,.023);
+    --gold:#d9a441;
+    --gold-2:#f2d79a;
+    --ok:#4ec97a;
+    --r:16px;
   }
   *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;background:var(--bg);color:var(--fg);
-    font:16px/1.65 ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:940px;margin:0 auto;padding:0 22px}
-  a{color:var(--accent);text-decoration:none}
-  a:hover{text-decoration:underline}
-  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
-    background:var(--card);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--fg);
+    font:400 16px/1.6 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    font-feature-settings:"kern" 1,"liga" 1,"cv11" 1;
+    overflow-x:hidden;
+  }
+  /* ambient depth — a single warm bloom behind the hero */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(680px 460px at 12% -8%, rgba(217,164,65,.10), transparent 62%),
+      radial-gradient(520px 380px at 92% 4%, rgba(217,164,65,.05), transparent 60%);
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+  a{color:inherit;text-decoration:none}
 
-  header{padding:26px 0;border-bottom:1px solid var(--line)}
-  .brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:19px;letter-spacing:-.01em}
-  .mark{width:34px;height:34px;border-radius:50%;flex:none;display:block}
+  /* ── nav ───────────────────────────────────────── */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(8,9,11,.72);backdrop-filter:blur(14px) saturate(150%);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:650;font-size:17px;letter-spacing:-.015em}
+  .brand img{width:34px;height:34px;border-radius:50%;display:block}
+  .nav-links{display:flex;gap:30px;font-size:14.5px;color:var(--dim)}
+  .nav-links a{transition:color .18s}
+  .nav-links a:hover{color:var(--fg)}
+  @media(max-width:720px){.nav-links{display:none}}
 
-  .hero{padding:84px 0 64px}
-  h1{font-size:clamp(34px,6.2vw,58px);line-height:1.04;letter-spacing:-.025em;margin:0 0 20px;max-width:16ch}
-  .lede{font-size:clamp(17px,2.3vw,21px);color:var(--dim);max-width:60ch;margin:0 0 30px}
-  .cta{display:flex;gap:12px;flex-wrap:wrap}
-  .btn{display:inline-block;padding:12px 22px;border-radius:9px;font-weight:600;font-size:15px;
-    background:var(--fg);color:var(--bg);border:1px solid var(--fg)}
-  .btn:hover{opacity:.87;text-decoration:none}
-  .btn.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+  /* ── hero ──────────────────────────────────────── */
+  .hero{padding:118px 0 96px;max-width:900px}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:9px;margin-bottom:26px;
+    padding:7px 15px;border:1px solid var(--line-2);border-radius:99px;
+    font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);
+    background:rgba(255,255,255,.02);
+  }
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);
+    box-shadow:0 0 0 3px rgba(78,201,122,.14)}
+  h1{
+    font-size:clamp(40px,6.6vw,74px);line-height:1.02;letter-spacing:-.035em;
+    font-weight:640;margin:0 0 26px;
+  }
+  h1 .grad{
+    background:linear-gradient(103deg,var(--gold-2) 6%,var(--gold) 52%,#b98526 96%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .lede{font-size:clamp(17px,2vw,20.5px);line-height:1.62;color:var(--dim);max-width:62ch;margin:0 0 38px}
+  .cta{display:flex;gap:13px;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;padding:14px 26px;border-radius:11px;
+    font-weight:600;font-size:15px;letter-spacing:-.01em;transition:transform .18s,box-shadow .18s,background .18s;
+    background:linear-gradient(180deg,var(--gold-2),var(--gold));color:#241703;
+    box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 10px 30px -10px rgba(217,164,65,.55);
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 16px 40px -12px rgba(217,164,65,.7)}
+  .btn.ghost{
+    background:rgba(255,255,255,.035);color:var(--fg);border:1px solid var(--line-2);box-shadow:none;
+  }
+  .btn.ghost:hover{background:rgba(255,255,255,.07);transform:translateY(-2px);box-shadow:none}
 
-  section{padding:56px 0;border-top:1px solid var(--line)}
-  h2{font-size:13px;text-transform:uppercase;letter-spacing:.13em;color:var(--dim);margin:0 0 28px;font-weight:600}
-  h3{font-size:20px;margin:0 0 8px;letter-spacing:-.01em}
+  /* ── sections ──────────────────────────────────── */
+  section{padding:78px 0}
+  .sec-head{margin-bottom:38px;max-width:64ch}
+  .kicker{
+    font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);
+    font-weight:600;margin:0 0 14px;
+  }
+  h2{font-size:clamp(26px,3.4vw,38px);line-height:1.14;letter-spacing:-.025em;font-weight:620;margin:0 0 14px}
+  .sec-head p{color:var(--dim);font-size:16.5px;margin:0;line-height:1.6}
 
-  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(272px,1fr))}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:22px;display:flex;flex-direction:column}
-  .card p{color:var(--dim);margin:0 0 14px;font-size:15px;flex:1}
-  .meta{font-size:12.5px;color:var(--dim);display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:auto}
-  .tag{border:1px solid var(--line);border-radius:99px;padding:2px 9px;font-size:11.5px;letter-spacing:.03em}
-  .tag.live{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 35%,transparent)}
-  .tag.build{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 40%,transparent)}
-  .tag.research{color:var(--dim)}
+  /* ── cards ─────────────────────────────────────── */
+  .grid{display:grid;gap:18px}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(310px,1fr))}
+  .g4{grid-template-columns:repeat(auto-fit,minmax(212px,1fr))}
 
-  .proof{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(158px,1fr))}
-  .stat{border:1px solid var(--line);border-radius:11px;padding:17px;background:var(--card)}
-  .stat b{display:block;font-size:25px;letter-spacing:-.02em;line-height:1.2}
-  .stat span{font-size:12.5px;color:var(--dim)}
+  .card{
+    position:relative;border:1px solid var(--line);border-radius:var(--r);
+    background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));
+    padding:28px;display:flex;flex-direction:column;overflow:hidden;
+    transition:transform .22s cubic-bezier(.2,.7,.3,1),border-color .22s,box-shadow .22s;
+  }
+  /* hairline of gold that lights on hover */
+  .card::before{
+    content:"";position:absolute;inset:0 0 auto 0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(217,164,65,.55),transparent);
+    opacity:0;transition:opacity .25s;
+  }
+  .card:hover{transform:translateY(-4px);border-color:var(--line-2);
+    box-shadow:0 22px 60px -28px rgba(0,0,0,.9)}
+  .card:hover::before{opacity:1}
 
-  .note{border-left:3px solid var(--line);padding:2px 0 2px 17px;color:var(--dim);font-size:15px;max-width:70ch}
-  ul.plain{list-style:none;padding:0;margin:0}
-  ul.plain li{padding:11px 0;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
-  ul.plain li:last-child{border-bottom:0}
+  .card h3{font-size:20.5px;font-weight:620;letter-spacing:-.02em;margin:0 0 10px;display:flex;align-items:center;gap:10px}
+  .card p{color:var(--dim);font-size:15px;line-height:1.62;margin:0 0 20px;flex:1}
 
-  footer{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--dim);font-size:14px}
-  .foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;
+    letter-spacing:.07em;text-transform:uppercase;padding:4px 10px;border-radius:99px;
+    border:1px solid var(--line-2);color:var(--faint);white-space:nowrap;
+  }
+  .pill.live{color:var(--ok);border-color:rgba(78,201,122,.3);background:rgba(78,201,122,.07)}
+  .pill.build{color:var(--gold);border-color:rgba(217,164,65,.32);background:rgba(217,164,65,.07)}
+
+  .install{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:var(--gold-2);
+    background:rgba(0,0,0,.4);border:1px solid var(--line);border-radius:9px;
+    padding:10px 13px;margin-bottom:16px;overflow-x:auto;white-space:nowrap;
+  }
+  .links{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;color:var(--dim);margin-top:auto}
+  .links a{color:var(--dim);transition:color .18s;display:inline-flex;align-items:center;gap:5px}
+  .links a:hover{color:var(--gold-2)}
+  .links a::after{content:"→";font-size:12px;opacity:.6;transition:transform .18s}
+  .links a:hover::after{transform:translateX(2px)}
+
+  /* stat cards */
+  .stat{
+    border:1px solid var(--line);border-radius:14px;padding:24px 22px;
+    background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));
+    transition:border-color .22s,transform .22s;
+  }
+  .stat:hover{border-color:var(--line-2);transform:translateY(-3px)}
+  .stat b{
+    display:block;font-size:clamp(28px,3.4vw,36px);font-weight:640;letter-spacing:-.035em;line-height:1.1;
+    background:linear-gradient(180deg,#fff,#c9ced6);-webkit-background-clip:text;background-clip:text;color:transparent;
+    margin-bottom:8px;
+  }
+  .stat span{font-size:13.5px;color:var(--dim);line-height:1.5;display:block}
+
+  /* feature card (research) */
+  .feature{
+    display:grid;grid-template-columns:1.35fr 1fr;gap:36px;align-items:center;
+    border:1px solid var(--line);border-radius:20px;padding:38px;
+    background:
+      radial-gradient(600px 300px at 88% 50%, rgba(217,164,65,.09), transparent 68%),
+      linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));
+  }
+  @media(max-width:820px){.feature{grid-template-columns:1fr;gap:26px;padding:28px}}
+  .feature h3{font-size:clamp(21px,2.6vw,28px);letter-spacing:-.025em;margin:0 0 14px;line-height:1.22;font-weight:620}
+  .feature p{color:var(--dim);font-size:15.5px;line-height:1.65;margin:0 0 22px}
+  .figures{display:grid;gap:11px}
+  .fig{display:flex;align-items:baseline;gap:13px;padding:13px 16px;border:1px solid var(--line);
+    border-radius:11px;background:rgba(0,0,0,.28)}
+  .fig b{font-size:23px;font-weight:640;letter-spacing:-.02em;color:var(--gold-2);min-width:56px}
+  .fig span{font-size:13.5px;color:var(--dim);line-height:1.45}
+
+  /* roadmap rows as cards */
+  .rows{display:grid;gap:12px}
+  .row{
+    display:flex;gap:16px;align-items:flex-start;padding:20px 22px;border:1px solid var(--line);
+    border-radius:13px;background:rgba(255,255,255,.018);transition:border-color .2s,background .2s;
+  }
+  .row:hover{border-color:var(--line-2);background:rgba(255,255,255,.032)}
+  .row div{flex:1;min-width:0}
+  .row strong{display:block;font-size:15.5px;font-weight:600;margin-bottom:5px;letter-spacing:-.01em}
+  .row p{margin:0;color:var(--dim);font-size:14.5px;line-height:1.55}
+
+  .note{
+    border-left:2px solid rgba(217,164,65,.45);padding:4px 0 4px 18px;color:var(--faint);
+    font-size:14.5px;line-height:1.6;max-width:72ch;margin-top:26px;
+  }
+
+  /* closing CTA */
+  .close{
+    border:1px solid var(--line-2);border-radius:22px;padding:clamp(34px,5vw,58px);text-align:center;
+    background:
+      radial-gradient(700px 320px at 50% 0%, rgba(217,164,65,.12), transparent 70%),
+      linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.012));
+  }
+  .close h2{margin-bottom:16px}
+  .close p{color:var(--dim);max-width:56ch;margin:0 auto 32px;font-size:16.5px;line-height:1.65}
+  .close .cta{justify-content:center}
+
+  footer{border-top:1px solid var(--line);padding:44px 0 66px;margin-top:70px}
+  .foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center;
+    color:var(--faint);font-size:14px}
+  .foot a{color:var(--dim);transition:color .18s}
+  .foot a:hover{color:var(--gold-2)}
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;scroll-behavior:auto}
+    .card:hover,.stat:hover,.btn:hover{transform:none}
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="wrap brand"><img class="mark" src="logo.png" alt="" width="34" height="34"> AurumFlux</div>
-</header>
+<nav>
+  <div class="wrap nav-in">
+    <a class="brand" href="/"><img src="logo.png" alt="AurumFlux" width="34" height="34"> AurumFlux</a>
+    <div class="nav-links">
+      <a href="#products">Products</a>
+      <a href="#research">Research</a>
+      <a href="#building">Building</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
 
 <div class="wrap">
 
   <div class="hero">
-    <h1>Infrastructure for when software acts on the world.</h1>
-    <p class="lede">An AI agent retries a call after a timeout. It doesn't know whether the first attempt landed — so the charge, the email, the write happens twice. We build the layer that makes it happen exactly once, and proves it did.</p>
+    <span class="eyebrow"><span class="dot"></span> Shipping in the open</span>
+    <h1>Infrastructure for when software <span class="grad">acts on the world.</span></h1>
+    <p class="lede">An AI agent retries a call after a timeout. It never learns whether the first attempt landed — so the charge, the email, the write happens twice. We build the layer that makes it happen exactly once, and proves it did.</p>
     <div class="cta">
-      <a class="btn" href="https://aurumflux20.github.io/once-kernel-ts/">See it fail, then not fail</a>
-      <a class="btn ghost" href="#work">What's shipped</a>
+      <a class="btn" href="https://aurumflux20.github.io/once-kernel-ts/">Watch 1,000 agents try to double-charge</a>
+      <a class="btn ghost" href="#products">Explore products</a>
     </div>
   </div>
 
-  <section id="proof">
-    <h2>Verified, not claimed</h2>
-    <div class="proof">
-      <div class="stat"><b>1,000 → 1</b><span>racing callers, one execution — every run</span></div>
+  <section id="proof" style="padding-top:0">
+    <div class="grid g4">
+      <div class="stat"><b>1,000 → 1</b><span>racing callers, exactly one execution — every single run</span></div>
       <div class="stat"><b>671</b><span>MCP servers scanned for retry safety</span></div>
       <div class="stat"><b>121</b><span>tests green across the kernel</span></div>
-      <div class="stat"><b>0</b><span>runtime dependencies</span></div>
+      <div class="stat"><b>Zero</b><span>runtime dependencies, by design</span></div>
     </div>
-    <p class="note" style="margin-top:20px">Every number on this page can be checked by a stranger. The scan method — including the four times our own scanner was wrong — is published with the data.</p>
+    <p class="note">Every number here can be checked by a stranger. Our scan method is published in full — including the four times our own scanner was wrong.</p>
   </section>
 
-  <section id="work">
-    <h2>Shipped &amp; installable today</h2>
-    <div class="grid">
+  <section id="products">
+    <div class="sec-head">
+      <p class="kicker">Products</p>
+      <h2>Shipped, installable, and running today</h2>
+      <p>Open-source infrastructure and two commercial products. Nothing on this list is a promise — each one has a command you can run or a URL you can open right now.</p>
+    </div>
 
-      <div class="card">
-        <h3>once-kernel</h3>
-        <p>The idempotency kernel. Exactly-once execution under real concurrency, with receipts that prove <em>what</em> ran — plus a hash-chained ledger an outsider can verify without trusting you.</p>
-        <div class="meta">
-          <span class="tag live">live</span>
-          <code>npm i once-kernel</code>
-          <a href="https://github.com/aurumflux20/once-kernel-ts">TypeScript</a> ·
+    <div class="grid g3">
+
+      <article class="card">
+        <h3>once-kernel <span class="pill live">Live</span></h3>
+        <p>The idempotency kernel. Exactly-once execution under real concurrency, receipts that prove <em>what</em> ran, and a hash-chained ledger an outsider can verify without trusting you.</p>
+        <div class="install">npm i once-kernel</div>
+        <div class="links">
+          <a href="https://github.com/aurumflux20/once-kernel-ts">TypeScript</a>
           <a href="https://github.com/aurumflux20/once-kernel">Python</a>
         </div>
-      </div>
+      </article>
 
-      <div class="card">
-        <h3>effectfence</h3>
-        <p>An MCP server that fences side effects at the agent edge: prepare, commit, abort. Written in Rust, ships as a single binary for four platforms.</p>
-        <div class="meta">
-          <span class="tag live">live</span>
-          <code>npx effectfence</code>
-          <a href="https://github.com/aurumflux20/effectfence">GitHub</a> ·
+      <article class="card">
+        <h3>effectfence <span class="pill live">Live</span></h3>
+        <p>An MCP server that fences side effects at the agent edge — prepare, commit, abort. Written in Rust, ships as a single binary across four platforms.</p>
+        <div class="install">npx effectfence</div>
+        <div class="links">
+          <a href="https://github.com/aurumflux20/effectfence">GitHub</a>
           <a href="https://crates.io/crates/effectfence">crates.io</a>
         </div>
-      </div>
+      </article>
 
-      <div class="card">
-        <h3>fencescan</h3>
-        <p>Points at any codebase and reports tool calls that could fire the same effect twice. Evidence and candidates — never a verdict, because an outsider usually can't prove a double-fire from code alone.</p>
-        <div class="meta">
-          <span class="tag live">live</span>
-          <code>npx fencescan</code>
+      <article class="card">
+        <h3>fencescan <span class="pill live">Live</span></h3>
+        <p>Point it at a codebase and it reports tool calls that could fire the same effect twice — evidence and candidates, never a verdict, because an outsider usually cannot prove a double-fire from code alone.</p>
+        <div class="install">npx fencescan</div>
+        <div class="links">
           <a href="https://github.com/aurumflux20/fencescan">GitHub</a>
         </div>
-      </div>
+      </article>
 
-      <div class="card">
-        <h3>Glint</h3>
-        <p>Finds billing leaks across Shopify and Stripe for agencies — the revenue that quietly stops arriving.</p>
-        <div class="meta">
-          <span class="tag live">live</span>
+      <article class="card">
+        <h3>Glint <span class="pill live">Live</span></h3>
+        <p>Finds billing leaks across Shopify and Stripe for agencies — the revenue that quietly stops arriving, surfaced before the client notices.</p>
+        <div class="links">
           <a href="https://glint.aurumflux.co">glint.aurumflux.co</a>
         </div>
-      </div>
+      </article>
 
-      <div class="card">
-        <h3>BondPermit</h3>
-        <p>Checks whether an opening date is real: permit and compliance clearance you can share with a landlord or a lender.</p>
-        <div class="meta">
-          <span class="tag live">live</span>
+      <article class="card">
+        <h3>BondPermit <span class="pill live">Live</span></h3>
+        <p>Answers whether an opening date is real — permit and compliance clearance you can share with a landlord, a lender, or an investor.</p>
+        <div class="links">
           <a href="https://bondpermit.com">bondpermit.com</a>
         </div>
+      </article>
+
+      <article class="card">
+        <h3>Fence Audit <span class="pill build">Service</span></h3>
+        <p>Five days, fixed scope. Every side-effecting path in your system inventoried and fenced, with a test in your CI that keeps it that way. The libraries stay free — this is help applying them where money moves.</p>
+        <div class="links">
+          <a href="https://github.com/aurumflux20/effectfence/blob/main/SUPPORT.md">What it covers</a>
+          <a href="mailto:hello@aurumflux.co?subject=Fence%20Audit">Enquire</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="research">
+    <div class="sec-head">
+      <p class="kicker">Research</p>
+      <h2>We measure the things everyone assumes</h2>
+    </div>
+
+    <div class="feature">
+      <div>
+        <h3>We scanned 671 MCP servers to see what happens when an agent retries</h3>
+        <p>Published with aggregates only and no names, with every failed lookup excluded rather than counted as a zero — and a section on what a scanner fundamentally cannot see from outside a codebase. The caveats run before the analysis, not after.</p>
+        <div class="links"><a href="https://dev.to/aurumflux20/we-scanned-671-mcp-servers-to-see-what-happens-when-an-agent-retries-3pnc">Read the full report</a></div>
       </div>
-
+      <div class="figures">
+        <div class="fig"><b>80%</b><span>perform real writes — send, charge, create, delete</span></div>
+        <div class="fig"><b>32%</b><span>of those have no visible idempotency guard</span></div>
+        <div class="fig"><b>35</b><span>touch money with no guard we could find</span></div>
+      </div>
     </div>
   </section>
 
-  <section>
-    <h2>Being built — honest status</h2>
-    <ul class="plain">
-      <li><span class="tag build">building</span> <strong>Provider Truth Atlas</strong> — measured, not assumed: what real providers actually do when you retry. Resend measured; the rest marked unknown until tested.</li>
-      <li><span class="tag build">building</span> <strong>The Retry Contract</strong> — a per-tool declaration of retry behaviour, proposed as a superset of MCP's existing hints. <a href="https://github.com/aurumflux20/fencescan/blob/main/docs/RETRY-CONTRACT.md">Draft RFC</a>, holes welcome.</li>
-      <li><span class="tag research">researching</span> <strong>Settlement ledger for teams</strong> — org-wide evidence of what agents did to the world. Design stage; nothing shipped.</li>
-    </ul>
-    <p class="note" style="margin-top:22px">Nothing above is sold, promised, or dated. When something ships it moves up to the list that has an install command under it — that's the only promotion criterion we use.</p>
-  </section>
+  <section id="building">
+    <div class="sec-head">
+      <p class="kicker">In progress</p>
+      <h2>What we're building next</h2>
+      <p>Listed with honest status. Nothing here is sold, promised, or dated — it moves up to the products list only when there's a command you can run.</p>
+    </div>
 
-  <section>
-    <h2>Research</h2>
-    <div class="card" style="max-width:none">
-      <h3>We scanned 671 MCP servers to see what happens when an agent retries</h3>
-      <p>80% perform real writes. Of those, 32% have no visible idempotency guard. 35 touch money with no guard we could find. Published with aggregates only, no names, failed lookups excluded rather than counted as zeros — and a section on what a scanner fundamentally cannot see.</p>
-      <div class="meta"><a href="https://dev.to/aurumflux20/we-scanned-671-mcp-servers-to-see-what-happens-when-an-agent-retries-3pnc">Read the report</a></div>
+    <div class="rows">
+      <div class="row">
+        <span class="pill build">Building</span>
+        <div>
+          <strong>Provider Truth Atlas</strong>
+          <p>Measured, not assumed: what real providers actually do when you retry them. Resend is measured; everything else is marked unknown until it's been tested.</p>
+        </div>
+      </div>
+      <div class="row">
+        <span class="pill build">Building</span>
+        <div>
+          <strong>The Retry Contract</strong>
+          <p>A per-tool declaration of retry behaviour, proposed as a superset of MCP's existing annotations rather than a competitor to them. <a href="https://github.com/aurumflux20/fencescan/blob/main/docs/RETRY-CONTRACT.md" style="color:var(--gold-2)">Draft RFC</a> — holes welcome.</p>
+        </div>
+      </div>
+      <div class="row">
+        <span class="pill">Researching</span>
+        <div>
+          <strong>Settlement ledger for teams</strong>
+          <p>Org-wide, verifiable evidence of what agents did to the world. Design stage — nothing shipped, nothing for sale.</p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section>
-    <h2>Work with us</h2>
-    <p class="lede" style="font-size:17px">The libraries are free and stay free. Some teams want help applying them to a codebase that already has money moving through it — every side-effecting path inventoried and fenced, with a test in your CI that keeps it that way.</p>
-    <div class="cta">
-      <a class="btn" href="mailto:hello@aurumflux.co?subject=Fence%20Audit">hello@aurumflux.co</a>
-      <a class="btn ghost" href="https://github.com/aurumflux20/effectfence/blob/main/SUPPORT.md">What an audit covers</a>
+  <section id="contact">
+    <div class="close">
+      <h2>If your agents touch money or mail,<br>the retry problem is already in your system.</h2>
+      <p>The only question is whether you find it before your customers do. Scan your own code in one command — free, no signup, nothing sent anywhere.</p>
+      <div class="cta">
+        <a class="btn" href="mailto:hello@aurumflux.co?subject=Fence%20Audit">hello@aurumflux.co</a>
+        <a class="btn ghost" href="https://github.com/aurumflux20">View our code</a>
+      </div>
     </div>
   </section>
 
@@ -185,8 +383,8 @@
 
 <footer>
   <div class="wrap foot">
-    <div>AurumFlux · Burbank, California</div>
-    <div><a href="https://github.com/aurumflux20">GitHub</a> · <a href="mailto:hello@aurumflux.co">hello@aurumflux.co</a></div>
+    <div>© 2026 AurumFlux · Burbank, California</div>
+    <div><a href="https://github.com/aurumflux20">GitHub</a> &nbsp;·&nbsp; <a href="https://x.com/aurum2026">X</a> &nbsp;·&nbsp; <a href="mailto:hello@aurumflux.co">hello@aurumflux.co</a></div>
   </div>
 </footer>
 
