@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AurumFlux — infrastructure for when software acts on the world</title>
+<meta name="description" content="Open-source retry-safety and idempotency tooling for AI agents, plus compliance products. Every claim here is verifiable.">
+<meta property="og:title" content="AurumFlux">
+<meta property="og:description" content="Infrastructure for when software acts on the world. Exactly once, with proof.">
+<style>
+  :root{
+    --bg:#0b0d10; --fg:#e9ecef; --dim:#8c959f; --line:#1c222a; --card:#111519;
+    --gold:#d4a24c; --ok:#3fb950; --accent:#58a6ff;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#fff; --fg:#16191d; --dim:#5b6570; --line:#e6eaee; --card:#f7f9fb; --gold:#a97c22; }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--fg);
+    font:16px/1.65 ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:0 22px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
+    background:var(--card);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+
+  header{padding:26px 0;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:19px;letter-spacing:-.01em}
+  .mark{width:26px;height:26px;border-radius:50%;
+    background:conic-gradient(from 210deg,var(--gold),#f0d9a8,var(--gold));flex:none}
+
+  .hero{padding:84px 0 64px}
+  h1{font-size:clamp(34px,6.2vw,58px);line-height:1.04;letter-spacing:-.025em;margin:0 0 20px;max-width:16ch}
+  .lede{font-size:clamp(17px,2.3vw,21px);color:var(--dim);max-width:60ch;margin:0 0 30px}
+  .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:12px 22px;border-radius:9px;font-weight:600;font-size:15px;
+    background:var(--fg);color:var(--bg);border:1px solid var(--fg)}
+  .btn:hover{opacity:.87;text-decoration:none}
+  .btn.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+
+  section{padding:56px 0;border-top:1px solid var(--line)}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.13em;color:var(--dim);margin:0 0 28px;font-weight:600}
+  h3{font-size:20px;margin:0 0 8px;letter-spacing:-.01em}
+
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(272px,1fr))}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:22px;display:flex;flex-direction:column}
+  .card p{color:var(--dim);margin:0 0 14px;font-size:15px;flex:1}
+  .meta{font-size:12.5px;color:var(--dim);display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:auto}
+  .tag{border:1px solid var(--line);border-radius:99px;padding:2px 9px;font-size:11.5px;letter-spacing:.03em}
+  .tag.live{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 35%,transparent)}
+  .tag.build{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 40%,transparent)}
+  .tag.research{color:var(--dim)}
+
+  .proof{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(158px,1fr))}
+  .stat{border:1px solid var(--line);border-radius:11px;padding:17px;background:var(--card)}
+  .stat b{display:block;font-size:25px;letter-spacing:-.02em;line-height:1.2}
+  .stat span{font-size:12.5px;color:var(--dim)}
+
+  .note{border-left:3px solid var(--line);padding:2px 0 2px 17px;color:var(--dim);font-size:15px;max-width:70ch}
+  ul.plain{list-style:none;padding:0;margin:0}
+  ul.plain li{padding:11px 0;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+  ul.plain li:last-child{border-bottom:0}
+
+  footer{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--dim);font-size:14px}
+  .foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap brand"><span class="mark" aria-hidden="true"></span> AurumFlux</div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <h1>Infrastructure for when software acts on the world.</h1>
+    <p class="lede">An AI agent retries a call after a timeout. It doesn't know whether the first attempt landed — so the charge, the email, the write happens twice. We build the layer that makes it happen exactly once, and proves it did.</p>
+    <div class="cta">
+      <a class="btn" href="https://aurumflux20.github.io/once-kernel-ts/">See it fail, then not fail</a>
+      <a class="btn ghost" href="#work">What's shipped</a>
+    </div>
+  </div>
+
+  <section id="proof">
+    <h2>Verified, not claimed</h2>
+    <div class="proof">
+      <div class="stat"><b>1,000 → 1</b><span>racing callers, one execution — every run</span></div>
+      <div class="stat"><b>671</b><span>MCP servers scanned for retry safety</span></div>
+      <div class="stat"><b>121</b><span>tests green across the kernel</span></div>
+      <div class="stat"><b>0</b><span>runtime dependencies</span></div>
+    </div>
+    <p class="note" style="margin-top:20px">Every number on this page can be checked by a stranger. The scan method — including the four times our own scanner was wrong — is published with the data.</p>
+  </section>
+
+  <section id="work">
+    <h2>Shipped &amp; installable today</h2>
+    <div class="grid">
+
+      <div class="card">
+        <h3>once-kernel</h3>
+        <p>The idempotency kernel. Exactly-once execution under real concurrency, with receipts that prove <em>what</em> ran — plus a hash-chained ledger an outsider can verify without trusting you.</p>
+        <div class="meta">
+          <span class="tag live">live</span>
+          <code>npm i once-kernel</code>
+          <a href="https://github.com/aurumflux20/once-kernel-ts">TypeScript</a> ·
+          <a href="https://github.com/aurumflux20/once-kernel">Python</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>effectfence</h3>
+        <p>An MCP server that fences side effects at the agent edge: prepare, commit, abort. Written in Rust, ships as a single binary for four platforms.</p>
+        <div class="meta">
+          <span class="tag live">live</span>
+          <code>npx effectfence</code>
+          <a href="https://github.com/aurumflux20/effectfence">GitHub</a> ·
+          <a href="https://crates.io/crates/effectfence">crates.io</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>fencescan</h3>
+        <p>Points at any codebase and reports tool calls that could fire the same effect twice. Evidence and candidates — never a verdict, because an outsider usually can't prove a double-fire from code alone.</p>
+        <div class="meta">
+          <span class="tag live">live</span>
+          <code>npx fencescan</code>
+          <a href="https://github.com/aurumflux20/fencescan">GitHub</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Glint</h3>
+        <p>Finds billing leaks across Shopify and Stripe for agencies — the revenue that quietly stops arriving.</p>
+        <div class="meta">
+          <span class="tag live">live</span>
+          <a href="https://glint.aurumflux.co">glint.aurumflux.co</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>BondPermit</h3>
+        <p>Checks whether an opening date is real: permit and compliance clearance you can share with a landlord or a lender.</p>
+        <div class="meta">
+          <span class="tag live">live</span>
+          <a href="https://bondpermit.com">bondpermit.com</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <h2>Being built — honest status</h2>
+    <ul class="plain">
+      <li><span class="tag build">building</span> <strong>Provider Truth Atlas</strong> — measured, not assumed: what real providers actually do when you retry. Resend measured; the rest marked unknown until tested.</li>
+      <li><span class="tag build">building</span> <strong>The Retry Contract</strong> — a per-tool declaration of retry behaviour, proposed as a superset of MCP's existing hints. <a href="https://github.com/aurumflux20/fencescan/blob/main/docs/RETRY-CONTRACT.md">Draft RFC</a>, holes welcome.</li>
+      <li><span class="tag research">researching</span> <strong>Settlement ledger for teams</strong> — org-wide evidence of what agents did to the world. Design stage; nothing shipped.</li>
+    </ul>
+    <p class="note" style="margin-top:22px">Nothing above is sold, promised, or dated. When something ships it moves up to the list that has an install command under it — that's the only promotion criterion we use.</p>
+  </section>
+
+  <section>
+    <h2>Research</h2>
+    <div class="card" style="max-width:none">
+      <h3>We scanned 671 MCP servers to see what happens when an agent retries</h3>
+      <p>80% perform real writes. Of those, 32% have no visible idempotency guard. 35 touch money with no guard we could find. Published with aggregates only, no names, failed lookups excluded rather than counted as zeros — and a section on what a scanner fundamentally cannot see.</p>
+      <div class="meta"><a href="https://dev.to/aurumflux20/we-scanned-671-mcp-servers-to-see-what-happens-when-an-agent-retries-3pnc">Read the report</a></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Work with us</h2>
+    <p class="lede" style="font-size:17px">The libraries are free and stay free. Some teams want help applying them to a codebase that already has money moving through it — every side-effecting path inventoried and fenced, with a test in your CI that keeps it that way.</p>
+    <div class="cta">
+      <a class="btn" href="mailto:hello@aurumflux.co?subject=Fence%20Audit">hello@aurumflux.co</a>
+      <a class="btn ghost" href="https://github.com/aurumflux20/effectfence/blob/main/SUPPORT.md">What an audit covers</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <div>AurumFlux · Burbank, California</div>
+    <div><a href="https://github.com/aurumflux20">GitHub</a> · <a href="mailto:hello@aurumflux.co">hello@aurumflux.co</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
