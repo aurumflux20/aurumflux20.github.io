@@ -96,7 +96,7 @@ const AF = (() => {
   // with a faint prismatic fringe — the way a cut stone splits sunlight.
   function glint(x, y, s, i){
     const len = s*9;
-    ctx.strokeStyle = `rgba(255,240,205,${0.6*i})`;
+    ctx.strokeStyle = `rgba(255,228,170,${0.6*i})`;
     ctx.lineWidth = Math.max(0.6, s*0.32);
     ctx.beginPath();
     ctx.moveTo(x-len,y); ctx.lineTo(x+len,y);
@@ -112,20 +112,16 @@ const AF = (() => {
     ctx.moveTo(x+d,y-d); ctx.lineTo(x-d,y+d);
     ctx.stroke();
 
-    // prismatic fringe — the rainbow a real diamond throws
-    ctx.strokeStyle = `rgba(120,190,255,${0.18*i})`;
+    // warm dispersion only — a blue fringe reads as grey at this density
+    ctx.strokeStyle = `rgba(255,170,90,${0.20*i})`;
     ctx.lineWidth = Math.max(0.4, s*0.14);
-    ctx.beginPath();
-    ctx.moveTo(x-len*0.72,y-1.2); ctx.lineTo(x+len*0.72,y-1.2);
-    ctx.stroke();
-    ctx.strokeStyle = `rgba(255,150,120,${0.15*i})`;
     ctx.beginPath();
     ctx.moveTo(x-len*0.72,y+1.2); ctx.lineTo(x+len*0.72,y+1.2);
     ctx.stroke();
 
     // blown-out core
     const gr = ctx.createRadialGradient(x,y,0,x,y,s*3.4);
-    gr.addColorStop(0, `rgba(255,248,228,${0.95*i})`);
+    gr.addColorStop(0, `rgba(255,240,205,${0.92*i})`);
     gr.addColorStop(0.28, `rgba(255,224,150,${0.55*i})`);
     gr.addColorStop(1, "transparent");
     ctx.fillStyle = gr;
@@ -147,13 +143,13 @@ const AF = (() => {
 
     for(const s of stars){
       const a = s.a*(0.6+0.4*Math.sin(el*1.1+s.ph));
-      ctx.fillStyle = `rgba(190,205,230,${a*0.45})`;
+      ctx.fillStyle = `rgba(214,190,150,${a*0.4})`;
       ctx.fillRect(s.x,s.y,s.s,s.s);
     }
 
     if(settled>0){
       const gr = ctx.createRadialGradient(cx,cy,0,cx,cy,scale*2.3);
-      gr.addColorStop(0, `rgba(255,215,140,${0.13*settled})`);
+      gr.addColorStop(0, `rgba(226,160,52,${0.11*settled})`);
       gr.addColorStop(0.4, `rgba(217,164,65,${0.05*settled})`);
       gr.addColorStop(1,"transparent");
       ctx.fillStyle = gr;
@@ -213,10 +209,13 @@ const AF = (() => {
         bb = Math.min(120, 22  + shade*40  + gloss*40);
       } else if (L < 0.5) {                // mark: shadow → deep bronze
         const k = L / 0.5;
-        rr = 96 + k*114; gg = 54 + k*88; bb = 16 + k*30;
-      } else {                             // mark: light → gold → champagne
+        rr = 88 + k*117; gg = 46 + k*99; bb = 10 + k*30;
+      } else {                             // mark: light → RICH gold, capped
+        // Blue is held down hard: the red-blue gap is what the eye reads as
+        // "gold" rather than "warm white". Measured at (156,146,119) before
+        // this cap — a gap of 37, which is grey. Target gap is 150+.
         const k = (L - 0.5) / 0.5;
-        rr = 210 + k*45; gg = 142 + k*88; bb = 46 + k*122;
+        rr = 205 + k*45; gg = 145 + k*50; bb = 40 + k*42;
       }
       const bodyA = alpha * (p.isWord ? 0.80 : (0.6 + p.l*0.4));
       ctx.fillStyle = `rgba(${rr|0},${gg|0},${bb|0},${bodyA})`;
