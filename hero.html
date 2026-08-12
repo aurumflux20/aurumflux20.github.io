@@ -56,9 +56,12 @@ const AF = (() => {
       const facet = p.l > 0.80 ? Math.random() : 0;
       // The wordmark must stay upright — only the circular mark revolves.
       const isWord = p.y > 0.30;
+      // Where this particle sits within the wordmark band, 0 = top, 1 = bottom.
+      // Drives the emboss: lit along the upper edge, shadowed underneath.
+      const wY = isWord ? Math.min(1, Math.max(0, (p.y - 0.34) / 0.26)) : 0;
 
       return {
-        ang, rad, tx, ty, isWord,
+        ang, rad, tx, ty, isWord, wY,
         sAng: ang-wind, sRad: spread,
         r:p.r, g:p.g, b:p.b, l:p.l,
         delay: 0.30*(1-Math.min(1,rad/(scale*1.05))) + Math.random()*0.32,
@@ -67,7 +70,7 @@ const AF = (() => {
         twS: 0.8+Math.random()*2.2,
         drift: Math.random()*Math.PI*2,
         // sparkle: rare, sharp, staggered — sun catching one facet at a time
-        flare: facet > 0.86,
+        flare: !isWord && facet > 0.86,
         fPh: Math.random()*Math.PI*2,
         fSp: 0.35+Math.random()*0.85,
       };
@@ -199,14 +202,24 @@ const AF = (() => {
       // for the glint cores, which is where a real stone puts it.
       const L = p.l;
       let rr, gg, bb;
-      if (L < 0.5) {                       // shadow → deep bronze
+      if (p.isWord) {
+        // Embossed metal, not light: a narrow specular band along the top of
+        // each glyph, deep bronze underneath, and a much tighter range than
+        // the mark so it reads solid and struck rather than glowing.
+        const gloss = Math.pow(1 - p.wY, 2.2);        // hot only near the top edge
+        const shade = 0.42 + 0.36*(1 - p.wY) + 0.30*L;
+        rr = Math.min(238, 108 + shade*118 + gloss*46);
+        gg = Math.min(196, 66  + shade*96  + gloss*44);
+        bb = Math.min(120, 22  + shade*40  + gloss*40);
+      } else if (L < 0.5) {                // mark: shadow → deep bronze
         const k = L / 0.5;
         rr = 96 + k*114; gg = 54 + k*88; bb = 16 + k*30;
-      } else {                             // light → gold → champagne
+      } else {                             // mark: light → gold → champagne
         const k = (L - 0.5) / 0.5;
         rr = 210 + k*45; gg = 142 + k*88; bb = 46 + k*122;
       }
-      ctx.fillStyle = `rgba(${rr|0},${gg|0},${bb|0},${alpha*(0.6+p.l*0.4)})`;
+      const bodyA = alpha * (p.isWord ? 0.80 : (0.6 + p.l*0.4));
+      ctx.fillStyle = `rgba(${rr|0},${gg|0},${bb|0},${bodyA})`;
       ctx.beginPath(); ctx.arc(x,y,size,0,6.283); ctx.fill();
 
       // facets catching the light
