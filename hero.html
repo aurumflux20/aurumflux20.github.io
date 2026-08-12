@@ -122,7 +122,7 @@ const AF = (() => {
 
     // blown-out core
     const gr = ctx.createRadialGradient(x,y,0,x,y,s*3.4);
-    gr.addColorStop(0, `rgba(255,255,255,${0.95*i})`);
+    gr.addColorStop(0, `rgba(255,248,228,${0.95*i})`);
     gr.addColorStop(0.28, `rgba(255,224,150,${0.55*i})`);
     gr.addColorStop(1, "transparent");
     ctx.fillStyle = gr;
@@ -192,12 +192,20 @@ const AF = (() => {
         bright = alpha;
       }
 
-      // Lift toward *gold*, not white. Red and green are pushed hard, blue
-      // only barely — that separation is what keeps a bright particle reading
-      // as molten gold instead of a white dot. Whiteness lives in the glints.
-      const rr = Math.min(255, p.r*1.16 + 34);
-      const gg = Math.min(255, p.g*1.10 + 22);
-      const bb = Math.min(255, p.b*0.96 + 6);
+      // The logo's own pixels run near-white on the upper crescent, which
+      // reads as silver once every particle is lit. So brightness is remapped
+      // onto a gold ramp instead of preserved: deep bronze in shadow, rich
+      // gold at mid, pale champagne at peak — never white. White is reserved
+      // for the glint cores, which is where a real stone puts it.
+      const L = p.l;
+      let rr, gg, bb;
+      if (L < 0.5) {                       // shadow → deep bronze
+        const k = L / 0.5;
+        rr = 96 + k*114; gg = 54 + k*88; bb = 16 + k*30;
+      } else {                             // light → gold → champagne
+        const k = (L - 0.5) / 0.5;
+        rr = 210 + k*45; gg = 142 + k*88; bb = 46 + k*122;
+      }
       ctx.fillStyle = `rgba(${rr|0},${gg|0},${bb|0},${alpha*(0.6+p.l*0.4)})`;
       ctx.beginPath(); ctx.arc(x,y,size,0,6.283); ctx.fill();
 
