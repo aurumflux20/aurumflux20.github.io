@@ -54,9 +54,11 @@ const AF = (() => {
 
       // How diamond-like this particle is: the brightest facets throw flares.
       const facet = p.l > 0.80 ? Math.random() : 0;
+      // The wordmark must stay upright — only the circular mark revolves.
+      const isWord = p.y > 0.30;
 
       return {
-        ang, rad,
+        ang, rad, tx, ty, isWord,
         sAng: ang-wind, sRad: spread,
         r:p.r, g:p.g, b:p.b, l:p.l,
         delay: 0.30*(1-Math.min(1,rad/(scale*1.05))) + Math.random()*0.32,
@@ -91,7 +93,7 @@ const AF = (() => {
   // with a faint prismatic fringe — the way a cut stone splits sunlight.
   function glint(x, y, s, i){
     const len = s*9;
-    ctx.strokeStyle = `rgba(255,252,240,${0.55*i})`;
+    ctx.strokeStyle = `rgba(255,240,205,${0.6*i})`;
     ctx.lineWidth = Math.max(0.6, s*0.32);
     ctx.beginPath();
     ctx.moveTo(x-len,y); ctx.lineTo(x+len,y);
@@ -121,7 +123,7 @@ const AF = (() => {
     // blown-out core
     const gr = ctx.createRadialGradient(x,y,0,x,y,s*3.4);
     gr.addColorStop(0, `rgba(255,255,255,${0.95*i})`);
-    gr.addColorStop(0.3, `rgba(255,240,200,${0.5*i})`);
+    gr.addColorStop(0.28, `rgba(255,224,150,${0.55*i})`);
     gr.addColorStop(1, "transparent");
     ctx.fillStyle = gr;
     ctx.beginPath(); ctx.arc(x,y,s*3.4,0,6.283); ctx.fill();
@@ -167,7 +169,8 @@ const AF = (() => {
         size = p.size*0.85; bright = alpha;
       } else if(el < T_DRIFT + p.delay + T_GATHER){
         const u = easeOutQuint(Math.min(1,(el-T_DRIFT-p.delay)/T_GATHER));
-        const ang = p.sAng + (p.ang+spin - p.sAng)*easeInOutCubic(u);
+        const aim = p.isWord ? p.ang : p.ang + spin;
+        const ang = p.sAng + (aim - p.sAng)*easeInOutCubic(u);
         const over = 1 + 0.045*Math.sin(u*Math.PI)*(1-u);
         const rad = (p.sRad + (p.rad-p.sRad)*u)*over;
         x = cx + Math.cos(ang)*rad;
@@ -175,20 +178,26 @@ const AF = (() => {
         alpha = 0.35 + 0.65*u; size = p.size*(0.85+0.4*u); bright = alpha;
       } else {
         // Settled AND revolving — the mark turns as one body.
-        const a = p.ang + spin;
         const wob = 0.4*Math.sin(p.drift + el*0.4);
-        x = cx + Math.cos(a)*(p.rad+wob);
-        y = cy + Math.sin(a)*(p.rad+wob);
+        if(p.isWord){
+          x = cx + p.tx + Math.cos(p.drift+el*0.35)*0.45;
+          y = cy + p.ty + Math.sin(p.drift+el*0.35)*0.45;
+        } else {
+          const a = p.ang + spin;
+          x = cx + Math.cos(a)*(p.rad+wob);
+          y = cy + Math.sin(a)*(p.rad+wob);
+        }
         alpha = 0.86 + 0.14*Math.sin(el*p.twS+p.tw);
         size = p.size*(1.03+0.06*Math.sin(el*p.twS*1.3+p.tw));
         bright = alpha;
       }
 
-      // brighter, hotter body: push toward white at the core
-      const w = 0.42 + p.l*0.35;                 // whiteness of the core
-      const rr = Math.min(255, p.r + (255-p.r)*w);
-      const gg = Math.min(255, p.g + (255-p.g)*w);
-      const bb = Math.min(255, p.b + (255-p.b)*w);
+      // Lift toward *gold*, not white. Red and green are pushed hard, blue
+      // only barely — that separation is what keeps a bright particle reading
+      // as molten gold instead of a white dot. Whiteness lives in the glints.
+      const rr = Math.min(255, p.r*1.16 + 34);
+      const gg = Math.min(255, p.g*1.10 + 22);
+      const bb = Math.min(255, p.b*0.96 + 6);
       ctx.fillStyle = `rgba(${rr|0},${gg|0},${bb|0},${alpha*(0.6+p.l*0.4)})`;
       ctx.beginPath(); ctx.arc(x,y,size,0,6.283); ctx.fill();
 
