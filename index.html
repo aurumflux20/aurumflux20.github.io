@@ -242,22 +242,32 @@
 
   <section id="proof" style="padding-top:0">
     <div class="grid g4">
-      <div class="stat"><b>1,000 → 1</b><span>racing callers, exactly one execution — every single run</span></div>
-      <div class="stat"><b>671</b><span>MCP servers scanned for retry safety</span></div>
-      <div class="stat"><b>121</b><span>tests green across the kernel</span></div>
-      <div class="stat"><b>Zero</b><span>runtime dependencies, by design</span></div>
+      <div class="stat"><b>27,153</b><span>agent tools read from source, not guessed</span></div>
+      <div class="stat"><b>671</b><span>MCP servers scanned — of 755 attempted</span></div>
+      <div class="stat"><b>1,000 → 1</b><span>racing agents, one execution — counted, four consecutive runs</span></div>
+      <div class="stat"><b>6</b><span>bugs we found attacking our own kernel — all published</span></div>
     </div>
-    <p class="note">Every number here can be checked by a stranger. Our scan method is published in full — including the four times our own scanner was wrong.</p>
+    <p class="note">Every number here can be checked by a stranger, and the failures are printed next to the successes — 84 repos we could not scan, four times our own scanner was wrong, six bugs in our own kernel. A vendor who has never found a bug in their own system has not looked.</p>
   </section>
 
   <section id="products">
     <div class="sec-head">
       <p class="kicker">Products</p>
       <h2>Shipped, installable, and running today</h2>
-      <p>Open-source infrastructure and two commercial products. Nothing on this list is a promise — each one has a command you can run or a URL you can open right now.</p>
+      <p>Four open-source kernels, two commercial products, one service. Nothing on this list is a promise — each one has a command you can run or a URL you can open right now.</p>
     </div>
 
     <div class="grid g3">
+
+      <article class="card">
+        <h3>seal <span class="pill live">Live</span></h3>
+        <p>Write authority for agents that move money. One atomic admission per intent <em>across processes</em>, confirmation where the payment provider's own records — not ours — decide whether a receipt is final, and approvals where nobody can sign off on their own spend. Where the provider can't answer, it stays UNKNOWN and never quietly becomes fine.</p>
+        <div class="install">python storm.py --n 1000</div>
+        <div class="links">
+          <a href="https://github.com/aurumflux20/seal">GitHub</a>
+          <a href="https://github.com/aurumflux20/seal/blob/main/docs/PLAIN-ENGLISH.md">In plain English</a>
+        </div>
+      </article>
 
       <article class="card">
         <h3>once-kernel <span class="pill live">Live</span></h3>
@@ -305,11 +315,12 @@
       </article>
 
       <article class="card">
-        <h3>Fence Audit <span class="pill build">Service</span></h3>
-        <p>Five days, fixed scope. Every side-effecting path in your system inventoried and fenced, with a test in your CI that keeps it that way. The libraries stay free — this is help applying them where money moves.</p>
+        <h3>Write-Authority Mission <span class="pill build">Service</span></h3>
+        <p>One money path — charge, payout, send, refund — made safe to run unattended, and provable to your security reviewer. Fixed scope, fixed price, 7–10 days, one path done properly rather than a survey nobody acts on. <strong>If we cannot show you a real double-fire or reconciliation gap on a path you actually run, there is no invoice.</strong> You keep the findings either way.</p>
+        <div class="install">$12,000 fixed · one money path</div>
         <div class="links">
-          <a href="https://github.com/aurumflux20/effectfence/blob/main/SUPPORT.md">What it covers</a>
-          <a href="mailto:hello@aurumflux.co?subject=Fence%20Audit">Enquire</a>
+          <a href="https://github.com/aurumflux20/seal">Check the proof first</a>
+          <a href="mailto:hello@aurumflux.co?subject=Write-Authority%20Mission">Email us — we work in writing, no calls</a>
         </div>
       </article>
 
@@ -332,6 +343,23 @@
         <div class="fig"><b>80%</b><span>perform real writes — send, charge, create, delete</span></div>
         <div class="fig"><b>32%</b><span>of those have no visible idempotency guard</span></div>
         <div class="fig"><b>35</b><span>touch money with no guard we could find</span></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div>
+        <h3>We attack our own kernel until it breaks, then publish what broke</h3>
+        <p>A thousand real processes released by one barrier at a single Postgres, where the "payment" increments a counter that cannot lie — if two callers run, the counter says two and the run fails loudly. World confirmation is measured against live Stripe test mode rather than a mock, because a mock agrees with whatever you already believe. The hostile tests are the point: forged approval tickets, replayed tickets, someone changing the amount after it was approved, someone approving their own spend, two approvers racing to be the second vote in the same millisecond.</p>
+        <p>Six bugs in our own kernel were found this way and every one is written up in the open, including the two that a green test suite was hiding. Where a guarantee has a limit, the limit is printed next to it — a certificate says only what was actually proven, and "we don't know" never quietly becomes "it's fine."</p>
+        <div class="links">
+          <a href="https://github.com/aurumflux20/seal/blob/main/STORM-PROOF.md">What broke, and how</a>
+          <a href="https://github.com/aurumflux20/seal">Run it yourself</a>
+        </div>
+      </div>
+      <div class="figures">
+        <div class="fig"><b>115</b><span>tests on the money kernel, including the hostile ones</span></div>
+        <div class="fig"><b>4</b><span>consecutive 1,000-caller storms, one execution each</span></div>
+        <div class="fig"><b>Live</b><span>Stripe test mode, not a mock</span></div>
       </div>
     </div>
   </section>
