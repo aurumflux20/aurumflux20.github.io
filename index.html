@@ -233,7 +233,7 @@
   <div class="hero">
     <span class="eyebrow"><span class="dot"></span> Shipping in the open</span>
     <h1>Infrastructure for when software <span class="grad">acts on the world.</span></h1>
-    <p class="lede">An AI agent retries a call after a timeout. It never learns whether the first attempt landed — so the charge, the email, the write happens twice. We build the layer that makes it happen exactly once, and proves it did.</p>
+    <p class="lede">An AI agent retries a call after a timeout. It never learns whether the first attempt landed — so the charge, the email, the write happens twice. We read the handler code of 86 MCP servers to find out how often that is really true: <strong>15 fire twice, and six of those are official vendor servers</strong>. We build the layer that makes it happen exactly once, and proves it did.</p>
     <div class="cta">
       <a class="btn" href="https://aurumflux20.github.io/once-kernel-ts/">Watch 1,000 agents try to double-charge</a>
       <a class="btn ghost" href="#products">Explore products</a>
@@ -242,19 +242,19 @@
 
   <section id="proof" style="padding-top:0">
     <div class="grid g4">
-      <div class="stat"><b>27,153</b><span>agent tools read from source, not guessed</span></div>
-      <div class="stat"><b>671</b><span>MCP servers scanned — of 755 attempted</span></div>
+      <div class="stat"><b>15 of 86</b><span>MCP servers we read fire the same effect twice on a retry &mdash; six are official vendor servers</span></div>
+      <div class="stat"><b>12 &rarr; 12</b><span>identical calls, twelve duplicate records &mdash; in a vendor's own server, filed publicly with the repro</span></div>
       <div class="stat"><b>1,000 → 1</b><span>racing agents, one execution — counted, four consecutive runs</span></div>
-      <div class="stat"><b>6</b><span>bugs we found attacking our own kernel — all published</span></div>
+      <div class="stat"><b>14</b><span>bugs we found in our own code — every one published, with the failing test</span></div>
     </div>
-    <p class="note">Every number here can be checked by a stranger, and the failures are printed next to the successes — 84 repos we could not scan, four times our own scanner was wrong, six bugs in our own kernel. A vendor who has never found a bug in their own system has not looked.</p>
+    <p class="note">Every number here can be checked by a stranger. The duplicate-record finding is a <a href="https://github.com/mongodb-js/mongodb-mcp-server/issues/1432">public issue with a reproduction</a> on a vendor's own server; the money-path findings &mdash; including a duplicate-refund path in a payment provider's official MCP server &mdash; went to those vendors privately, because a public writeup of those is a recipe. And the failures are printed next to the successes: 84 repos we could not scan, four times our own scanner was wrong, fourteen bugs in our own code. A vendor who has never found a bug in their own system has not looked.</p>
   </section>
 
   <section id="products">
     <div class="sec-head">
       <p class="kicker">Products</p>
       <h2>Shipped, installable, and running today</h2>
-      <p>Four open-source kernels, two commercial products, one service. Nothing on this list is a promise — each one has a command you can run or a URL you can open right now.</p>
+      <p>Five open-source kernels, two commercial products, one service. Nothing on this list is a promise — each one has a command you can run or a URL you can open right now.</p>
     </div>
 
     <div class="grid g3">
@@ -262,7 +262,7 @@
       <article class="card">
         <h3>seal <span class="pill live">Live</span></h3>
         <p>Write authority for agents that move money. One atomic admission per intent <em>across processes</em>, confirmation where the payment provider's own records — not ours — decide whether a receipt is final, and approvals where nobody can sign off on their own spend. Where the provider can't answer, it stays UNKNOWN and never quietly becomes fine.</p>
-        <div class="install">python storm.py --n 1000</div>
+        <div class="install">pip install seal-kernel</div>
         <div class="links">
           <a href="https://github.com/aurumflux20/seal">GitHub</a>
           <a href="https://github.com/aurumflux20/seal/blob/main/docs/PLAIN-ENGLISH.md">In plain English</a>
@@ -281,11 +281,22 @@
 
       <article class="card">
         <h3>effectfence <span class="pill live">Live</span></h3>
-        <p>An MCP server that fences side effects at the agent edge — prepare, commit, abort. Written in Rust, ships as a single binary across four platforms.</p>
-        <div class="install">npx effectfence</div>
+        <p>Stands <em>in front of</em> an MCP server you already run and fences every tool call, with no change to your agent. Identical duplicates execute once; the rest are handed the recorded result instead of firing again. <code>probe</code> proves the race on your own server first — fire twelve identical calls and count how many effects actually landed &mdash; <code>npx effectfence probe --calls 12</code>.</p>
+        <div class="install">npx effectfence wrap -- &lt;your server&gt;</div>
         <div class="links">
           <a href="https://github.com/aurumflux20/effectfence">GitHub</a>
+          <a href="https://www.npmjs.com/package/effectfence">npm</a>
           <a href="https://crates.io/crates/effectfence">crates.io</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>coherence <span class="pill live">Live</span></h3>
+        <p>An agent can claim anything. Its transcript already records what actually ran. Coherence reads that file, pulls out every checkable claim &mdash; &ldquo;tests pass&rdquo;, &ldquo;pushed to main&rdquo; &mdash; and rules on each one against the real exit code beside it. A claim whose evidence went through a pipe is marked weak, not green, and a file it could not read is never reported as clean. See it with no setup: <code>coherence audit --demo</code>.</p>
+        <div class="install">pip install coherence-check</div>
+        <div class="links">
+          <a href="https://github.com/aurumflux20/coherence">GitHub</a>
+          <a href="https://pypi.org/project/coherence-check/">PyPI</a>
         </div>
       </article>
 
