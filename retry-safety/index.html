@@ -101,7 +101,7 @@
       <div class="stat"><b>3</b><span>verified safe</span></div>
       <div class="stat"><b>6</b><span>found &amp; fixed — payment paths</span></div>
       <div class="stat"><b>4.3h</b><span>fastest fix, report to release</span></div>
-      <div class="stat"><b>18</b><span>open, under disclosure (unnamed)</span></div>
+      <div class="stat"><b>19</b><span>open, under disclosure (unnamed)</span></div>
     </div>
 <p class="sub" style="margin-top:14px;font-size:13.5px"><strong style="color:var(--gold-2)">New:</strong> <a href="../state-of-retry-safety/" style="color:var(--gold-2);border-bottom:1px solid rgba(242,215,154,.3)">Seven in ten pay twice</a> — the field study behind this ledger: ten money paths read in three days, the seven shapes the defect takes, and what the safe ones do differently.</p>
     <div class="tblwrap"><table>
@@ -116,7 +116,7 @@
         <tr><td data-h="Implementation"><b>x402 MCP bridge</b><br><span class="tier">hpp-io</span></td><td data-h="Verdict"><span class="pill p-fixed">FIXED</span></td><td data-h="What was at stake">Wallet daily-spend cap could be exceeded by concurrent payments</td><td data-h="Evidence"><a href="https://github.com/hpp-io/x402-mcp-bridge/issues/10">#10</a></td><td data-h="Time to fix" class="num">18 h</td></tr>
         <tr><td data-h="Implementation"><b>hypawave MCP</b><br><span class="tier">hypawave</span></td><td data-h="Verdict"><span class="pill p-fixed">FIXED</span></td><td data-h="What was at stake">Spending cap bounded each payment, not total spend</td><td data-h="Evidence"><a href="https://github.com/hypawave/mcp/issues/1">#1</a></td><td data-h="Time to fix" class="num">26 h</td></tr>
         <tr><td data-h="Implementation"><b>Franklin</b><br><span class="tier">BlockRunAI · agent wallet</span></td><td data-h="Verdict"><span class="pill p-fixed">FIXED</span></td><td data-h="What was at stake">Wallet reservation released on an aborted x402 payment that could still settle</td><td data-h="Evidence"><a href="https://github.com/BlockRunAI/Franklin/issues/128">#128</a></td><td data-h="Time to fix" class="num">9 d</td></tr>
-        <tr><td data-h="Implementation"><b>18 implementations</b><br><span class="tier">facilitators, wallets, payment SDKs, MCP servers</span></td><td data-h="Verdict"><span class="pill p-open">UNDER DISCLOSURE</span></td><td data-h="What was at stake">Same seam, reported privately or as a finding-first issue with the fix</td><td data-h="Evidence">Named here only after they ship. Counts updated as they close.</td><td data-h="Time to fix" class="num">open</td></tr>
+        <tr><td data-h="Implementation"><b>19 implementations</b><br><span class="tier">facilitators, wallets, payment SDKs, MCP servers</span></td><td data-h="Verdict"><span class="pill p-open">UNDER DISCLOSURE</span></td><td data-h="What was at stake">Same seam, reported privately or as a finding-first issue with the fix</td><td data-h="Evidence">Named here only after they ship. Counts updated as they close.</td><td data-h="Time to fix" class="num">open</td></tr>
         <tr><td data-h="Implementation"><b>Everything else</b></td><td data-h="Verdict"><span class="pill p-open">UNREAD</span></td><td data-h="What was at stake">—</td><td data-h="Evidence">No verdict is implied by absence. Unread means unread.</td><td data-h="Time to fix" class="num">—</td></tr>
       </tbody>
     </table></div>
