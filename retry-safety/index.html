@@ -83,7 +83,7 @@
 <body>
 <nav><div class="wrap nav-in">
   <a class="brand" href="../"><img src="../logo.png" alt=""> AurumFlux</a>
-  <div class="nav-links"><a href="#ledger">Ledger</a><a href="#method">Method</a><a href="#verify">Get verified</a><a href="https://github.com/aurumflux20/hostile-facilitator">Battery</a></div>
+  <div class="nav-links"><a href="#ledger">Ledger</a><a href="#method">Method</a><a href="#whopays">Who pays</a><a href="#verify">Get verified</a><a href="https://github.com/aurumflux20/hostile-facilitator">Battery</a></div>
 </div></nav>
 
 <main class="wrap">
@@ -130,6 +130,20 @@
       <div class="card"><h3>Battery run — the strong tier</h3><p>The client makes one purchase against <a href="https://github.com/aurumflux20/hostile-facilitator" style="color:var(--gold-2)">hostile-facilitator</a>, which settles and then misbehaves on cue, counting how many distinct payments actually arrived. One is safe. Two is the double-charge.</p><ul><li><code>accept_then_timeout</code> — settles, hangs past your timeout</li><li><code>5xx_after_settle</code> — settles, returns 502</li><li><code>double_402</code> — re-challenges a request that already paid</li><li><code>slow_answer</code> — settles, answers just under the wire</li><li><code>reconcile_unavailable</code> — settles ambiguously, and the "did it land?" read also fails</li><li><code>declared_safe</code> — checks you are not <em>over</em>-refusing</li><li><code>clean</code> — control</li></ul></div>
       <div class="card"><h3>Code read — the honest tier</h3><p>A line-by-line read of the settle, retry and signing paths, written up as a public issue with the mechanism, why the existing guards do not cover it, the minimal fix, and the test that would have caught it. Every finding is checked against the implementer's own defences before it is filed, and each report states its own ceiling: a code read is not a live reproduction.</p><ul><li>Verdicts by code read are marked as such in the ledger.</li><li>A finding becomes public only after the gate that refuses to name a company next to an unfixed claim.</li><li>Nothing here is a CVE, an exploit, or an accusation — it is a reliability seam with a fix attached.</li></ul></div>
     </div>
+  </section>
+
+  <section id="whopays">
+    <h2>Who pays when it fires twice</h2>
+    <p class="sub">Every finding carries one of three verdicts, because this is the question asked immediately after "was one found." We do not pay the claim — we tell you which of the three you are in, with a battery run and a line number.</p>
+    <div class="tblwrap"><table>
+      <thead><tr><th>Verdict</th><th>What it means</th><th>What follows</th></tr></thead>
+      <tbody>
+        <tr><td data-h="Verdict"><b>Licensed-path defect</b></td><td data-h="What it means">The money path itself turned an unknown outcome into a second payment — the settle that timed out after it landed, the retry that signed a fresh authorization, the guard that released on an error that wasn't one.</td><td data-h="What follows">The operator of that path owes their customer. Fix and test attached; the row goes up with credit on the day they ship.</td></tr>
+        <tr><td data-h="Verdict"><b>Credential outside the path</b></td><td data-h="What it means">The extra charge came from something holding the provider secret directly, bypassing every guard that was built. The guards held; the key did not stay where the guards are.</td><td data-h="What follows">Not a defect in the path, and the report says so plainly — named as the shape of leak it is.</td></tr>
+        <tr><td data-h="Verdict"><b>Undetermined — held</b></td><td data-h="What it means">Whether a second record is possible could not be established from the code or a reproduction.</td><td data-h="What follows">Reported as undetermined. Never as safe, never as found. Nobody gets to guess; the intent stays open.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="sub" style="margin-top:14px;font-size:13.5px">The third row is what makes the other two worth anything — it is the same rule the code is graded against, applied to our own report. <a href="https://github.com/aurumflux20/seal/blob/main/docs/REVIEW-DELIVERABLE.md" style="color:var(--gold-2);border-bottom:1px solid rgba(242,215,154,.3)">What a review returns, specified in full →</a></p>
   </section>
 
   <section id="verify">
