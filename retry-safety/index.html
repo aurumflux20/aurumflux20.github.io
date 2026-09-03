@@ -83,7 +83,7 @@
 <body>
 <nav><div class="wrap nav-in">
   <a class="brand" href="../"><img src="../logo.png" alt=""> AurumFlux</a>
-  <div class="nav-links"><a href="#ledger">Ledger</a><a href="#method">Method</a><a href="#whopays">Who pays</a><a href="#verify">Get verified</a><a href="https://github.com/aurumflux20/hostile-facilitator">Battery</a></div>
+  <div class="nav-links"><a href="#rail">Rail</a><a href="#ledger">Ledger</a><a href="#method">Method</a><a href="#whopays">Who pays</a><a href="#verify">Get verified</a><a href="https://github.com/aurumflux20/hostile-facilitator">Battery</a></div>
 </div></nav>
 
 <main class="wrap">
@@ -92,6 +92,18 @@
     <h1>Which agent-payment code pays <span class="grad">once</span> when the answer is lost?</h1>
     <p class="lede">A payment settles. The connection drops before the reply. Most code reads that as "failed" and pays again — and every replay guard correctly lets the second payment through, because it is a genuinely new one. This register records, with public evidence, which implementations survive that moment.</p>
     <div class="rule">"Could not determine" is a terminal answer. It is never "did not happen."<small>The rule every verdict below is measured against. It is §4.3 of a retry-safety proposal we co-authored for MCP (a working draft with no sponsor yet, not an adopted standard) and the receiver obligation we argued for in the x402 settlement-status thread.</small></div>
+  </section>
+
+  <section id="rail">
+    <h2>The rail, measured</h2>
+    <p class="sub">Before grading anyone we counted who is actually there. Every host on the two public x402 directories was asked <code>GET /supported</code> — the one endpoint every facilitator must answer. No payment, no key, no account. Swept 3 Sep 2026.</p>
+    <div class="stats">
+      <div class="stat"><b>442</b><span>hosts on the public x402 lists</span></div>
+      <div class="stat"><b>11</b><span>live facilitators answering <code>/supported</code></span></div>
+      <div class="stat"><b>7</b><span>of those settle on a public testnet — probeable end to end</span></div>
+      <div class="stat"><b>2</b><span>of the 11 carry an open double-charge finding of ours, with a runnable red test</span></div>
+    </div>
+    <p class="sub" style="margin-top:14px;font-size:13.5px">Most of the 442 are sellers, not facilitators — one facilitator settles for many. Eleven is the size of the layer that decides whether an agent pays once. The two with open findings are counted, not named, until they ship; the probe that produced the finding is public (<a href="https://github.com/aurumflux20/hostile-facilitator/blob/main/hostile_facilitator/hostile_client.py" style="color:var(--gold-2);border-bottom:1px solid rgba(242,215,154,.3)">hostile_client.py</a>), so any of the eleven can run it on themselves first.</p>
   </section>
 
   <section id="ledger">
