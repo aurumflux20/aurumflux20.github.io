@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The instruction defeats the mechanism — AurumFlux</title>
+<meta name="description" content="Eight agent-payment toolkits from major payment platforms, read for one failure. Five can charge twice. In three of them the code is correct and the sentence describing it to the model is what breaks it.">
+<meta property="og:title" content="Retry-Safety Index">
+<meta property="og:description" content="Which agent-payment implementations pay once when the answer is lost. Verdicts with receipts.">
+<meta property="og:image" content="https://aurumflux20.github.io/logo.png">
+<meta name="theme-color" content="#08090b">
+<link rel="icon" type="image/png" href="../logo.png">
+<style>
+  :root{--bg:#08090b;--bg-2:#0c0e12;--fg:#f2f4f7;--dim:#8a929c;--faint:#5a626c;--line:rgba(255,255,255,.075);--line-2:rgba(255,255,255,.14);--card:rgba(255,255,255,.023);--gold:#d9a441;--gold-2:#f2d79a;--ok:#4ec97a;--warn:#e0b04a;--r:16px}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(680px 460px at 12% -8%,rgba(217,164,65,.10),transparent 62%),radial-gradient(520px 380px at 92% 4%,rgba(217,164,65,.05),transparent 60%)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+  a{color:inherit;text-decoration:none}
+  nav{position:sticky;top:0;z-index:50;background:rgba(8,9,11,.72);backdrop-filter:blur(14px) saturate(150%);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:650;font-size:17px;letter-spacing:-.015em}
+  .brand img{width:34px;height:34px;border-radius:50%;display:block}
+  .nav-links{display:flex;gap:30px;font-size:14.5px;color:var(--dim)}
+  .nav-links a:hover{color:var(--fg)}
+  @media(max-width:720px){.nav-links{display:none}}
+  .hero{padding:92px 0 56px;max-width:900px}
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;margin-bottom:22px;padding:7px 15px;border:1px solid var(--line-2);border-radius:99px;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);background:rgba(255,255,255,.02)}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px rgba(78,201,122,.14)}
+  h1{font-size:clamp(36px,5.6vw,62px);line-height:1.04;letter-spacing:-.035em;font-weight:640;margin:0 0 22px;text-wrap:balance}
+  h1 .grad{background:linear-gradient(103deg,var(--gold-2) 6%,var(--gold) 52%,#b98526 96%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{font-size:clamp(17px,2vw,19.5px);line-height:1.62;color:var(--dim);max-width:64ch;margin:0 0 30px}
+  .rule{border-left:3px solid var(--gold);padding:10px 18px;margin:0 0 8px;font-size:17px;color:var(--fg);max-width:64ch}
+  .rule small{display:block;color:var(--faint);font-size:13px;margin-top:6px}
+  h2{font-size:26px;letter-spacing:-.02em;margin:64px 0 8px;font-weight:620}
+  .sub{color:var(--dim);margin:0 0 22px;max-width:70ch}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:8px 0 20px}
+  @media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:18px 20px}
+  .stat b{display:block;font-size:34px;letter-spacing:-.03em;font-weight:640;font-variant-numeric:tabular-nums}
+  .stat span{color:var(--dim);font-size:13.5px}
+  .tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th{font-weight:600;text-align:left;color:var(--dim);font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;padding:14px 16px;border-bottom:1px solid var(--line-2)}
+  td{padding:14px 16px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
+  tr:last-child td{border-bottom:0}
+  td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+  @media(max-width:760px){
+    table,thead,tbody,tr,th,td{display:block}
+    thead{display:none}
+    tr{padding:14px 16px;border-bottom:1px solid var(--line)}
+    tr:last-child{border-bottom:0}
+    td{padding:4px 0;border:0}
+    td::before{content:attr(data-h);display:block;color:var(--faint);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;margin-top:6px}
+    td:first-child::before{display:none}
+  }
+  .pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;letter-spacing:.03em;white-space:nowrap}
+  .p-safe{background:rgba(78,201,122,.14);color:var(--ok);border:1px solid rgba(78,201,122,.3)}
+  .p-fixed{background:rgba(217,164,65,.14);color:var(--gold-2);border:1px solid rgba(217,164,65,.3)}
+  .p-open{background:rgba(255,255,255,.05);color:var(--dim);border:1px solid var(--line-2)}
+  .tier{color:var(--faint);font-size:12.5px;white-space:nowrap}
+  td a{color:var(--gold-2);border-bottom:1px solid rgba(242,215,154,.25)}
+  td a:hover{border-bottom-color:var(--gold-2)}
+  .method{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:820px){.method{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:22px 24px}
+  .card h3{margin:0 0 10px;font-size:16.5px;letter-spacing:-.01em}
+  .card p,.card li{color:var(--dim);font-size:14.5px;margin:0}
+  .card ul{padding-left:18px;margin:8px 0 0}
+  .card li{margin:4px 0}
+  code{font:500 13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px}
+  .cta{margin:56px 0 0;border:1px solid rgba(217,164,65,.35);border-radius:var(--r);padding:26px 28px;background:linear-gradient(180deg,rgba(217,164,65,.08),rgba(217,164,65,.02))}
+  .cta h3{margin:0 0 8px;font-size:20px;letter-spacing:-.02em}
+  .cta p{color:var(--dim);margin:0 0 14px;max-width:68ch}
+  .btn{display:inline-block;padding:11px 18px;border-radius:10px;background:var(--gold);color:#1a1205;font-weight:650;font-size:14.5px}
+  .btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line-2);margin-left:10px}
+  .badge-snip{margin-top:14px;font-size:13px;color:var(--faint)}
+  footer{margin:72px 0 40px;color:var(--faint);font-size:13px;border-top:1px solid var(--line);padding-top:22px}
+  footer a{color:var(--dim)}
+</style>
+</head><body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../"><img src="../logo.png" alt=""> AurumFlux</a>
+  <div class="nav-links"><a href="../retry-safety/">The Index</a><a href="#finding">The finding</a><a href="#variants">Three variants</a><a href="#clean">Who was clean</a><a href="#method">Method</a></div>
+</div></nav>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow"><span class="dot"></span> Field note · 4 September 2026</div>
+    <h1>The code is right. The <span class="grad">sentence</span> is what charges twice.</h1>
+    <p class="lede">We read eight agent-payment toolkits published by card processors and billing platforms, for one question: when a payment succeeds but the reply is lost, does a retry charge the customer again? Five of the eight can. In three of those, the idempotency mechanism is implemented correctly — and the one line of documentation handed to the AI model instructs it to defeat that mechanism.</p>
+    <div class="rule">An MCP tool's only caller is a language model. The parameter description is not documentation — it is the entire specification, and it executes.<small>Which makes a sentence written for a human engineer a live defect when a model reads it.</small></div>
+  </section>
+
+  <section id="finding">
+    <h2>The number</h2>
+    <div class="stats">
+      <div class="stat"><b>8</b><span>toolkits read</span></div>
+      <div class="stat"><b>5</b><span>can charge twice</span></div>
+      <div class="stat"><b>3</b><span>where the code is correct and the description breaks it</span></div>
+      <div class="stat"><b>3</b><span>clean, named below with credit</span></div>
+    </div>
+    <p class="sub">Every one of the five carries an open finding filed with the mechanism, the file and line, and the fix. <b>None of them is named here.</b> A company is never put next to a bug it has not fixed — that rule is enforced by a gate in our tooling, not by our discretion. When a fix ships, the row goes up on the <a href="../retry-safety/" style="color:var(--gold-2);border-bottom:1px solid rgba(242,215,154,.3)">Index</a> with credit and time-to-fix as the headline. The three that were clean are named immediately, because that costs them nothing.</p>
+  </section>
+
+  <section id="variants">
+    <h2>Three ways the same guarantee fails</h2>
+    <p class="sub">The failure is always the same shape — an outcome that could not be determined becomes a second payment. What differs is where the break sits.</p>
+    <div class="tblwrap"><table>
+      <thead><tr><th>Variant</th><th>What the code does</th><th>Why it fails anyway</th></tr></thead>
+      <tbody>
+        <tr>
+          <td data-h="Variant"><b>The key is described as "unique"</b><br><span class="tier">2 toolkits</span></td>
+          <td data-h="What the code does">Idempotency key is <b>required</b> from the caller and never generated server-side. Correct, and better than most.</td>
+          <td data-h="Why it fails anyway">The description says the value must be <i>"unique for every request."</i> A human reads "request" as the purchase. A model reads it as <i>every call I make</i> — so on a retry it mints a fresh key, the platform correctly sees a new payment, and the customer is charged twice. In one case the platform even ships the correct recovery endpoint for an unknown outcome, whose precondition is holding the original key — the same key the description told the caller to change.</td>
+        </tr>
+        <tr>
+          <td data-h="Variant"><b>The key is per-client, not per-call</b><br><span class="tier">1 toolkit</span></td>
+          <td data-h="What the code does">Sets the platform's idempotency header from a configuration field on the client object.</td>
+          <td data-h="Why it fails anyway">There is no per-call path, and nothing in the toolkit ever assigns the field. Left at its default it is absent, so nothing is protected. Set as the configuration API invites, the <i>same</i> value rides every request for the client's lifetime, so distinct legitimate purchases collide on one key and the second silently returns the first one's result. Two options, neither correct.</td>
+        </tr>
+        <tr>
+          <td data-h="Variant"><b>No key, and an automatic retry</b><br><span class="tier">2 toolkits</span></td>
+          <td data-h="What the code does">Sends no idempotency identity on money-moving POSTs.</td>
+          <td data-h="Why it fails anyway">One re-sends the request automatically after an auth failure, with the same body and no shared identity between attempts. Another loads create-money tools inside a profile described as non-destructive. In both, a transport failure leaves the caller unable to distinguish "not applied" from "unknown", and the only available action is to send it again.</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="clean">
+    <h2>The three that were clean</h2>
+    <p class="sub">Named immediately and with credit, because a clean read costs them nothing and the ones who get it right deserve to be the visible ones.</p>
+    <div class="method">
+      <div class="card"><h3>Adyen — <code>adyen-mcp</code></h3><p>Annotations are honest. Create operations declare <code>idempotent: false</code>, which is exactly right: creating twice makes two things and they say so rather than implying coverage they do not have. No retry wrapper overrides the hints. Read 4 Sep 2026, by code read.</p></div>
+      <div class="card"><h3>Paddle — <code>paddle-agent-skills</code></h3><p>The best work we read. Their webhook skill teaches idempotency to the model explicitly — <i>"handlers may run multiple times for the same event"</i> — with upsert keyed on the platform's own identifier and retry semantics spelled out. This is what writing for a model caller looks like when it is done deliberately. Read 4 Sep 2026, by code read.</p></div>
+      <div class="card"><h3>Chargebee — <code>agentkit</code></h3><p>Exposes no money-moving tools at all: documentation search and code planning. Nothing to get wrong, and the restraint is worth recording. Read 4 Sep 2026, by code read.</p></div>
+    </div>
+    <p class="sub" style="margin-top:14px;font-size:13.5px">One further toolkit — the largest by adoption — could not be assessed at all: it serves its tool descriptions from a hosted endpoint that requires credentials, and we do not authenticate into anyone's production system to grade it. It is recorded as <b>unassessable</b>, which is not the same as safe and is not counted in either column.</p>
+  </section>
+
+  <section id="method">
+    <h2>Method, and its limits</h2>
+    <div class="method">
+      <div class="card"><h3>What we actually did</h3><p>Read the money path in each toolkit: where a payment is signed, sent, settled or retried, and what identity travels with it. Then read the parameter descriptions and tool annotations as the model receives them, because for an MCP server that text is the interface.</p><ul><li>Every verdict is a <b>code read</b>, labelled as such.</li><li>Findings were filed with the target before anything was written here.</li><li>No system was tested without permission.</li></ul></div>
+      <div class="card"><h3>What we did not do, and it matters</h3><p>We did not run an agent against these toolkits and count duplicate charges. That experiment would turn a mechanism into a rate, and until it is run this is a claim about what the instruction says, not about how often a given model obeys it.</p><ul><li>Model behaviour varies; the instruction pointing the wrong way does not.</li><li>Where a platform deduplicates server-side, a finding reduces to a documentation gap — we asked each one directly and said we would publish the correction.</li><li>Eight is not a random sample. It is the set of toolkits published by payment platforms that we could read.</li></ul></div>
+    </div>
+    <div class="cta">
+      <h3>Get your own read — free</h3>
+      <p>Submit any client, facilitator, SDK or toolkit that moves money — yours or someone else's. It gets read and graded on the public Index at no cost. If a finding is confirmed you are counted, never named, until you ship a fix; when you do, the row goes up with credit and your time-to-fix.</p>
+      <a class="btn" href="https://github.com/aurumflux20/hostile-facilitator/issues/new?template=submit.yml">Submit for grading — free</a>
+      <a class="btn ghost" href="../retry-safety/">See the Index</a>
+    </div>
+  </section>
+
+  <footer>
+    Maintained by <a href="../">AurumFlux</a>. Corrections welcome — open an issue on <a href="https://github.com/aurumflux20/hostile-facilitator/issues">hostile-facilitator</a> and cite the line. Verdicts are dated and never silently changed. If you are one of the five and believe the read is wrong, tell us and we will publish the correction with the same prominence as the claim.
+  </footer>
+</main>
+</body>
+</html>
