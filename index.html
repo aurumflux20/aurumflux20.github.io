@@ -238,6 +238,7 @@
       <a class="btn" href="https://aurumflux20.github.io/once-kernel-ts/">Watch 1,000 agents try to double-charge</a>
       <a class="btn ghost" href="#products">Explore products</a>
     </div>
+    <p class="note" style="margin-top:14px"><strong>Start here</strong> if you only want to stop double-charging customers on retries: <code>npx effectfence probe --calls 12</code> against a server you already run &mdash; it fires the ambiguous failures on purpose and counts how many times you actually paid for one purchase. One is safe; two is the bug. Building the payment path yourself? Start with <a href="https://github.com/aurumflux20/seal">seal</a>. <strong>Rails:</strong> none of this is Stripe-specific &mdash; the primitives sit between the agent and any irreversible call. Field work to date: x402 (USDC on Base, Solana, Stellar, and EVM facilitators), Stripe, and plain HTTP settlement.</p>
   </div>
 
   <section id="proof" style="padding-top:0">
@@ -254,7 +255,7 @@
     <div class="sec-head">
       <p class="kicker">Products</p>
       <h2>Shipped, installable, and running today</h2>
-      <p>Five open-source kernels, two commercial products, one service. Nothing on this list is a promise — each one has a command you can run or a URL you can open right now.</p>
+      <p>One place to start (above), five open-source kernels behind it, and one service. Nothing on this list is a promise — each one has a command you can run or a URL you can open right now.</p>
     </div>
 
     <div class="grid g3">
