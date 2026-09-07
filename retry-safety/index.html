@@ -88,7 +88,7 @@
 
 <main class="wrap">
   <section class="hero">
-    <div class="eyebrow"><span class="dot"></span> Public register · updated 3 Sep 2026</div>
+    <div class="eyebrow"><span class="dot"></span> Public register · updated 6 Sep 2026</div>
     <h1>Which agent-payment code pays <span class="grad">once</span> when the answer is lost?</h1>
     <p class="lede">A payment settles. The connection drops before the reply. Most code reads that as "failed" and pays again — and every replay guard correctly lets the second payment through, because it is a genuinely new one. This register records, with public evidence, which implementations survive that moment.</p>
     <div class="rule">"Could not determine" is a terminal answer. It is never "did not happen."<small>The rule every verdict below is measured against. It is §4.3 of a retry-safety proposal we co-authored for MCP (a working draft with no sponsor yet, not an adopted standard) and the receiver obligation we argued for in the x402 settlement-status thread.</small></div>
@@ -111,7 +111,7 @@
     <p class="sub">Every row links to its proof. Open findings are counted, never named — a company is not put next to a bug until they have fixed it. Fixed entries are listed with credit, because shipping a fix in hours is the thing worth recording.</p>
     <div class="stats">
       <div class="stat"><b>3</b><span>verified safe</span></div>
-      <div class="stat"><b>6</b><span>found &amp; fixed — payment paths</span></div>
+      <div class="stat"><b>7</b><span>found &amp; fixed — payment paths</span></div>
       <div class="stat"><b>4.3h</b><span>fastest fix, report to release</span></div>
       <div class="stat"><b>19</b><span>open, under disclosure (unnamed)</span></div>
     </div>
@@ -130,6 +130,7 @@
         <tr><td data-h="Implementation"><b>hypawave MCP</b><br><span class="tier">hypawave</span></td><td data-h="Verdict"><span class="pill p-fixed">FIXED</span></td><td data-h="What was at stake">Spending cap bounded each payment, not total spend</td><td data-h="Evidence"><a href="https://github.com/hypawave/mcp/issues/1">#1</a></td><td data-h="Time to fix" class="num">26 h</td></tr>
         <tr><td data-h="Implementation"><b>Franklin</b><br><span class="tier">BlockRunAI · agent wallet</span></td><td data-h="Verdict"><span class="pill p-fixed">FIXED</span></td><td data-h="What was at stake">Wallet reservation released on an aborted x402 payment that could still settle</td><td data-h="Evidence"><a href="https://github.com/BlockRunAI/Franklin/issues/128">#128</a></td><td data-h="Time to fix" class="num">9 d</td></tr>
         <tr><td data-h="Implementation"><b>sol-x402-facilitator</b><br><span class="tier">dchu3 · Solana x402 facilitator (deployed)</span></td><td data-h="Verdict"><span class="pill p-fixed">FIXED</span></td><td data-h="What was at stake">Pending settlements were pruned at 60 min while the reconciler could not rule until 120 min, so a retry inside that window found no pending row and settled again; their 2 Sep production rate-limit incident was this defect live</td><td data-h="Evidence"><a href="https://github.com/dchu3/sol-x402-facilitator/issues/9">#9</a> → <a href="https://github.com/dchu3/sol-x402-facilitator/pull/10">PR #10</a>, merged and deployed with regression tests reproducing both orderings; maintainer confirmed the Sep 2 incident matched defect 2</td><td data-h="Time to fix" class="num">41.4 h</td></tr>
+        <tr><td data-h="Implementation"><b>Tebra MCP server</b><br><span class="tier">jamesrosing/tebra-mcp-server · healthcare practice management, patient payments</span></td><td data-h="Verdict"><span class="pill p-fixed">FIXED</span></td><td data-h="What was at stake"><code>tebra_create_payment</code> retried on a timeout with no idempotency key and no server-side dedup, so an ambiguous outcome could post a second patient payment</td><td data-h="Evidence"><a href="https://github.com/jamesrosing/tebra-mcp-server/issues/13">#13</a> → <a href="https://github.com/jamesrosing/tebra-mcp-server/pull/18">PR #18</a> (0.5.1, on npm): every <code>Create*</code> action is now sent exactly once on an ambiguous failure and surfaces <code>AmbiguousOutcomeError</code> naming the read to verify with before resubmitting; retries only on failures that provably happened before Tebra could act</td><td data-h="Time to fix" class="num">26 d</td></tr>
         <tr><td data-h="Implementation"><b>19 implementations</b><br><span class="tier">facilitators, wallets, payment SDKs, MCP servers</span></td><td data-h="Verdict"><span class="pill p-open">UNDER DISCLOSURE</span></td><td data-h="What was at stake">Same seam, reported privately or as a finding-first issue with the fix</td><td data-h="Evidence">Named here only after they ship. Counts updated as they close.</td><td data-h="Time to fix" class="num">open</td></tr>
         <tr><td data-h="Implementation"><b>Everything else</b></td><td data-h="Verdict"><span class="pill p-open">UNREAD</span></td><td data-h="What was at stake">—</td><td data-h="Evidence">No verdict is implied by absence. Unread means unread.</td><td data-h="Time to fix" class="num">—</td></tr>
       </tbody>
