@@ -181,6 +181,21 @@
     </div>
   </section>
 
+  <section id="founding">
+    <div class="cta">
+      <h3>Founding badge — self-run, signed, $99 · first 10 servers</h3>
+      <p>The same battery, run by <b>you</b> on your own server, and the result <b>signed and anchored by us</b> so a reader can verify it without trusting either of us. No reply needed, no scheduling, nothing to send us but a file. Labelled <b>self-run, control published</b> on this page — the third evidence tier, exactly as it is.</p>
+      <ol class="badge-snip" style="margin:10px 0 0 18px;line-height:1.7">
+        <li>Pay: <a href="https://buy.stripe.com/5kQeVd0v67f2fKabBVdIA0q" style="color:var(--gold-2);border-bottom:1px solid rgba(242,215,154,.3)">$99, one-off</a>. The receipt email is where step 4 goes.</li>
+        <li>Run the battery against your server: <code>pip install "git+https://github.com/aurumflux20/hostile-facilitator@v0.1.2"</code> then <code>hostile-facilitator test --json result.json -- &lt;your one-purchase command&gt;</code>. Run the mutation control too (<code>hostile-facilitator selftest</code>) so the record shows the instrument can fail.</li>
+        <li>Record it: <code>pip install "coherence-check[attest]"</code> then <code>coherence conformance result.json --out session.json</code>. A mode where your client paid twice is recorded <b>open, never proven</b> — a failing run cannot be signed green by anyone, including us.</li>
+        <li>Reply to the receipt with <code>result.json</code> and <code>session.json</code>. Within 24 hours you get <code>attestation.json</code> plus a Sigstore Rekor anchor, and this one-liner any reader can run: <code>coherence verify attestation.json --pub &lt;our key&gt; --session session.json --rekor attestation.rekor.json</code>.</li>
+      </ol>
+      <a class="btn" href="https://buy.stripe.com/5kQeVd0v67f2fKabBVdIA0q" style="margin-top:14px">Founding badge — $99</a>
+      <p class="badge-snip" style="margin-top:10px">Ten only, then this rung closes. A clean run earns a <b>VERIFIED SAFE · self-run, signed</b> row and a badge; a failing run earns a private note with the failing mode and nothing on this page. <a href="https://github.com/aurumflux20/coherence/tree/main/examples/conformance" style="color:var(--dim);border-bottom:1px solid var(--line-2)">A real signed example, verifiable now</a>.</p>
+    </div>
+  </section>
+
   <footer>
     Maintained by <a href="../">AurumFlux</a>. Corrections welcome — open an issue on <a href="https://github.com/aurumflux20/hostile-facilitator/issues">hostile-facilitator</a> and cite the line. Verdicts are dated and never silently changed. The MCP retry-safety proposal referenced above is a <a href="https://github.com/YoadElkayam/mcp-fuse/tree/main/sep">working draft</a>, not an adopted standard.
   </footer>
