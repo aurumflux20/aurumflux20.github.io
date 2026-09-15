@@ -186,13 +186,23 @@
     </div>
   </section>
 
+  <section id="conformance">
+    <div class="cta">
+      <h3>Founding conformance run — we run it, $300 · first three implementations</h3>
+      <p>Between the two rungs above: <b>we</b> run the full battery against your implementation and the result is <b>published on this page</b>, named. That publication is the condition, not an extra — a founding rate buys a public result, and a verification nobody can check is not one. Findings come back within five business days; a clean run earns a <b>VERIFIED SAFE · by battery run</b> row within 24 hours.</p>
+      <p class="badge-snip" style="margin-top:10px">If you need the result kept private, that is the $1,200 attestation run above, not this rung.</p>
+      <a class="btn" href="https://buy.stripe.com/14A6oHb9K1UI69A21ldIA0o" style="margin-top:14px">Founding conformance run — $300</a>
+      <p class="badge-snip" style="margin-top:10px">Three only, then the standard rate is $1,200.</p>
+    </div>
+  </section>
+
   <section id="founding">
     <div class="cta">
       <h3>Founding badge — self-run, signed, $99 · first 10 servers</h3>
       <p>The same battery, run by <b>you</b> on your own server, and the result <b>signed and anchored by us</b> so a reader can verify it without trusting either of us. No reply needed, no scheduling, nothing to send us but a file. Labelled <b>self-run, control published</b> on this page — the third evidence tier, exactly as it is.</p>
       <ol class="badge-snip" style="margin:10px 0 0 18px;line-height:1.7">
         <li>Pay: <a href="https://buy.stripe.com/5kQeVd0v67f2fKabBVdIA0q" style="color:var(--gold-2);border-bottom:1px solid rgba(242,215,154,.3)">$99, one-off</a>. The receipt email is where step 4 goes.</li>
-        <li>Run the battery against your server: <code>pip install "git+https://github.com/aurumflux20/hostile-facilitator@v0.1.2"</code> then <code>hostile-facilitator test --json result.json -- &lt;your one-purchase command&gt;</code>. Run the mutation control too (<code>hostile-facilitator selftest</code>) so the record shows the instrument can fail.</li>
+        <li>Run the battery against your server: <code>pip install "git+https://github.com/aurumflux20/hostile-facilitator@v0.2.0"</code> then <code>hostile-facilitator test --json result.json -- &lt;your one-purchase command&gt;</code>. Run the mutation control too (<code>hostile-facilitator selftest</code>) so the record shows the instrument can fail.</li>
         <li>Record it: <code>pip install "coherence-check[attest]"</code> then <code>coherence conformance result.json --out session.json</code>. A mode where your client paid twice is recorded <b>open, never proven</b> — a failing run cannot be signed green by anyone, including us.</li>
         <li>Reply to the receipt with <code>result.json</code> and <code>session.json</code>. Within 24 hours you get <code>attestation.json</code> plus a Sigstore Rekor anchor, and this one-liner any reader can run: <code>coherence verify attestation.json --pub &lt;our key&gt; --session session.json --rekor attestation.rekor.json</code>.</li>
       </ol>
