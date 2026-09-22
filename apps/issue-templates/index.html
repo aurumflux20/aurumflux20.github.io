@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Issue Templates for Jira — Documentation | AurumFlux</title>
+<style>body{max-width:820px;margin:40px auto;padding:0 20px;font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#1a1a1a}h1{font-size:30px;margin-bottom:4px}h2{font-size:21px;margin-top:36px;border-bottom:1px solid #eee;padding-bottom:6px}h3{font-size:17px;margin-top:24px}code,pre{background:#f5f5f7;border-radius:5px}code{padding:1px 6px;font-size:14px}pre{padding:14px;overflow-x:auto;font-size:14px;line-height:1.5}.meta{color:#666;margin-top:0}table{border-collapse:collapse;width:100%;margin:12px 0}th,td{border:1px solid #e3e3e3;padding:8px 10px;text-align:left;font-size:15px}th{background:#fafafa}</style></head><body>
+<h1>Issue Templates by AurumFlux</h1>
+<p class="meta">Documentation · Jira Cloud · built on Atlassian Forge</p>
+
+<p>Save an issue and its whole child tree as a template, then apply it in one click. Every apply is checked against the target project's current configuration before anything is created, and is undone whole if any step fails.</p>
+
+<h2>Install</h2>
+<p>Install from the Atlassian Marketplace listing. The app adds an <strong>Issue Templates</strong> page under <em>Apps</em> in your Jira site, and a project-scoped page inside each project.</p>
+<p>It asks for three permissions: read Jira work, write Jira work, and app storage. It makes no network calls outside Atlassian.</p>
+
+<h2>Create a template</h2>
+<p>Open <em>Apps → Issue Templates</em> and fill the <strong>New template</strong> form.</p>
+<table>
+<tr><th>Field</th><th>What it does</th></tr>
+<tr><td>Name</td><td>How the template appears in the library. Must be unique.</td></tr>
+<tr><td>Scope</td><td><strong>Global</strong> (every project), <strong>Project</strong> (one project, set the key below), or <strong>Personal</strong> (only you).</td></tr>
+<tr><td>Project key</td><td>Only used when scope is Project, e.g. <code>ENG</code>.</td></tr>
+<tr><td>Category</td><td>A free-text label shown next to the template, e.g. <code>Delivery</code>.</td></tr>
+<tr><td>Root issue type</td><td>The issue type of the top issue, exactly as the project names it, e.g. <code>Epic</code> or <code>Task</code>.</td></tr>
+<tr><td>Root summary</td><td>The top issue's summary. May contain variables.</td></tr>
+<tr><td>Description</td><td>Optional description for the top issue. May contain variables.</td></tr>
+<tr><td>Children</td><td>The tree, one issue per line. See below.</td></tr>
+<tr><td>Variables</td><td>Comma-separated names you will be asked for at apply time.</td></tr>
+</table>
+
+<h3>Writing the child tree</h3>
+<p>One issue per line, in the form <code>Type: Summary</code>. Indent two spaces for each level down. Up to four levels.</p>
+<pre>Task: Cut release branch {{version}}
+  Sub-task: Freeze main and tag {{version}}
+  Sub-task: Run migration dry-run
+Task: Verify on staging
+  Sub-task: Smoke-test the checkout path
+Task: Ship to production</pre>
+<p>The type name must match the project's own name for that issue type. <code>Sub-task</code> and <code>Subtask</code> are different strings, and a project that calls it one will refuse the other. The app tells you which name it expected rather than guessing.</p>
+
+<h3>Variables</h3>
+<p>Write <code>{{name}}</code> anywhere in a summary or description, and list <code>name</code> in the Variables field. At apply time you are asked for a value for each one, and every occurrence is replaced before the issue is created.</p>
+
+<h2>Apply a template</h2>
+<p>Open the template library, choose a template, enter the target project key and any variable values, then apply. What happens, in order:</p>
+<ol>
+<li><strong>The template is checked first.</strong> The app reads the project's current issue types and create-screen fields. If the template asks for an issue type or a field the project no longer has, the whole apply is refused and it names what does not match. <em>Nothing is created.</em></li>
+<li><strong>The tree is created top down</strong>, parents before children, and each new issue key is recorded as it is made.</li>
+<li><strong>If any create fails</strong>, every issue that apply already created is deleted, children first, and the result lists what was removed. Anything that could not be removed is named rather than hidden.</li>
+<li><strong>If you apply twice</strong>, the second attempt returns the first result instead of building a second tree. An attempt still running is reported as in flight rather than duplicated.</li>
+</ol>
+
+<h2>Editing and deleting</h2>
+<p>Use <strong>Edit</strong> in the library to change a template in place, and <strong>Delete</strong> to remove it. Deleting a template does not touch issues that were created from it. Uninstalling the app removes all of its stored data for that site.</p>
+
+<h2>What v1 does not do</h2>
+<ul>
+<li>Applying from inside Jira's global issue-create dialog. Planned, not shipped.</li>
+<li>Trees deeper than four levels.</li>
+<li>Copying attachments, comments, links, or custom field values from a source issue. Templates carry issue type, summary, and description.</li>
+<li>Jira Data Center or Server, and Confluence. Jira Cloud only.</li>
+</ul>
+
+<h2>Permissions and what Jira will still refuse</h2>
+<p>The app calls the Jira API <em>as the person applying the template</em>, with that person's permissions. If a project's permission scheme, a required custom field, or a workflow validator blocks a create, Jira refuses it and the app reports that refusal back to you and rolls the apply back. It does not work around your site's configuration.</p>
+
+<h2>Data and privacy</h2>
+<p>Template definitions and a short record of each apply are held in Forge storage inside Atlassian's infrastructure. An account ID is stored only for personal-scope templates, so that only you see them. Nothing leaves Atlassian's platform. Full detail is in the <a href="/legal/privacy/">privacy policy</a>; the <a href="/legal/terms/">terms of service</a> cover the rest.</p>
+
+<h2>Support</h2>
+<p>Email <a href="mailto:hello@aurumflux.co">hello@aurumflux.co</a>. We aim to answer within two business days. Tell us the project key, the template name, and what you expected to happen; if an apply was rolled back, the result message names every issue it removed and that message is the most useful thing to paste.</p>
+</body></html>
