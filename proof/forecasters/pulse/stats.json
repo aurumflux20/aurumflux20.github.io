@@ -1,0 +1,22 @@
+{
+ "about": "",
+ "counts": {
+  "forecast": 23,
+  "genesis": 1,
+  "outcome": 0,
+  "scan": 2
+ },
+ "first_ts": 1791582942.8672514,
+ "head": [
+  25,
+  "13e73e33d9813b488f1231afc438916070fa652377276a19924459ae4435eeb9"
+ ],
+ "independent_events": 0,
+ "last_ts": 1791596721.250614,
+ "name": "Pulse forecast track record",
+ "pending": 12,
+ "public_key": "kFGeKOb5r4wogmOdFKgweHJFHP4A5h4nSMVR6lx2q/U=",
+ "settled": 0,
+ "slug": "pulse",
+ "verified": true
+}
