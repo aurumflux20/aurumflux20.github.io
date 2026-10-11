@@ -3,10 +3,10 @@
   "slug": "pulse",
   "name": "Pulse forecast track record",
   "verified": true,
-  "settled": 0,
-  "brier_model": null,
-  "brier_market": null,
-  "skill_vs_market": null,
-  "last_ts": 1791596721.250614
+  "settled": 38,
+  "brier_model": 0.1536,
+  "brier_market": 0.1133,
+  "skill_vs_market": -0.3557,
+  "last_ts": 1791675181.8419635
  }
 ]

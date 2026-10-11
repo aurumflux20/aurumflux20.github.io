@@ -1,22 +1,58 @@
 {
  "about": "",
+ "brier_market": 0.1133,
+ "brier_model": 0.1536,
+ "calibration": [
+  {
+   "from": 0.2,
+   "happened": 0.0833,
+   "n": 12,
+   "said": 0.2993,
+   "to": 0.4
+  },
+  {
+   "from": 0.4,
+   "happened": 0.7692,
+   "n": 13,
+   "said": 0.4945,
+   "to": 0.6
+  },
+  {
+   "from": 0.6,
+   "happened": 1.0,
+   "n": 12,
+   "said": 0.6818,
+   "to": 0.8
+  },
+  {
+   "from": 0.8,
+   "happened": 1.0,
+   "n": 1,
+   "said": 0.8025,
+   "to": 1.0
+  }
+ ],
  "counts": {
-  "forecast": 23,
+  "forecast": 65,
   "genesis": 1,
-  "outcome": 0,
-  "scan": 2
+  "outcome": 12,
+  "scan": 6
  },
  "first_ts": 1791582942.8672514,
  "head": [
-  25,
-  "13e73e33d9813b488f1231afc438916070fa652377276a19924459ae4435eeb9"
+  83,
+  "a8c32d224886bf0120913a33e29507c92746cdbd5e3dbcda676079bbb784fcd8"
  ],
- "independent_events": 0,
- "last_ts": 1791596721.250614,
+ "independent_events": 2,
+ "last_ts": 1791675181.8419635,
+ "logloss_market": 0.36167,
+ "logloss_model": 0.48761,
+ "model_beats_market_share": 0.1579,
  "name": "Pulse forecast track record",
- "pending": 12,
+ "pending": 17,
  "public_key": "kFGeKOb5r4wogmOdFKgweHJFHP4A5h4nSMVR6lx2q/U=",
- "settled": 0,
+ "settled": 38,
+ "skill_vs_market": -0.3557,
  "slug": "pulse",
  "verified": true
 }
