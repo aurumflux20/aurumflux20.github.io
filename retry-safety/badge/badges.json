@@ -1,0 +1,149 @@
+[
+ {
+  "name": "x402 reference implementation",
+  "slug": "x402-reference-implementation",
+  "badge": "https://aurumflux.co/retry-safety/badge/x402-reference-implementation.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-x402-reference-implementation",
+  "verdict": "verified · battery run"
+ },
+ {
+  "name": "Stellar facilitator",
+  "slug": "stellar-facilitator",
+  "badge": "https://aurumflux.co/retry-safety/badge/stellar-facilitator.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-stellar-facilitator",
+  "verdict": "verified · code read"
+ },
+ {
+  "name": "x402-rs",
+  "slug": "x402-rs",
+  "badge": "https://aurumflux.co/retry-safety/badge/x402-rs.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-x402-rs",
+  "verdict": "verified · battery run"
+ },
+ {
+  "name": "thirdweb x402 payer",
+  "slug": "thirdweb-x402-payer",
+  "badge": "https://aurumflux.co/retry-safety/badge/thirdweb-x402-payer.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-thirdweb-x402-payer",
+  "verdict": "verified · battery run"
+ },
+ {
+  "name": "Agent Press Wire MCP",
+  "slug": "agent-press-wire-mcp",
+  "badge": "https://aurumflux.co/retry-safety/badge/agent-press-wire-mcp.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-agent-press-wire-mcp",
+  "verdict": "verified · code read"
+ },
+ {
+  "name": "PipRail SDK",
+  "slug": "piprail-sdk",
+  "badge": "https://aurumflux.co/retry-safety/badge/piprail-sdk.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-piprail-sdk",
+  "verdict": "verified · code read"
+ },
+ {
+  "name": "Stripe Link CLI & SDK",
+  "slug": "stripe-link-cli-sdk",
+  "badge": "https://aurumflux.co/retry-safety/badge/stripe-link-cli-sdk.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-stripe-link-cli-sdk",
+  "verdict": "fixed"
+ },
+ {
+  "name": "Trigger.dev",
+  "slug": "trigger-dev",
+  "badge": "https://aurumflux.co/retry-safety/badge/trigger-dev.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-trigger-dev",
+  "verdict": "fixed"
+ },
+ {
+  "name": "ClawRouter",
+  "slug": "clawrouter",
+  "badge": "https://aurumflux.co/retry-safety/badge/clawrouter.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-clawrouter",
+  "verdict": "fixed"
+ },
+ {
+  "name": "Altana SDK",
+  "slug": "altana-sdk",
+  "badge": "https://aurumflux.co/retry-safety/badge/altana-sdk.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-altana-sdk",
+  "verdict": "fixed"
+ },
+ {
+  "name": "Agent402",
+  "slug": "agent402",
+  "badge": "https://aurumflux.co/retry-safety/badge/agent402.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-agent402",
+  "verdict": "fixed"
+ },
+ {
+  "name": "x402 MCP bridge",
+  "slug": "x402-mcp-bridge",
+  "badge": "https://aurumflux.co/retry-safety/badge/x402-mcp-bridge.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-x402-mcp-bridge",
+  "verdict": "fixed"
+ },
+ {
+  "name": "hypawave MCP",
+  "slug": "hypawave-mcp",
+  "badge": "https://aurumflux.co/retry-safety/badge/hypawave-mcp.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-hypawave-mcp",
+  "verdict": "fixed"
+ },
+ {
+  "name": "Franklin",
+  "slug": "franklin",
+  "badge": "https://aurumflux.co/retry-safety/badge/franklin.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-franklin",
+  "verdict": "fixed"
+ },
+ {
+  "name": "sol-x402-facilitator",
+  "slug": "sol-x402-facilitator",
+  "badge": "https://aurumflux.co/retry-safety/badge/sol-x402-facilitator.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-sol-x402-facilitator",
+  "verdict": "fixed"
+ },
+ {
+  "name": "resolve402-mcp",
+  "slug": "resolve402-mcp",
+  "badge": "https://aurumflux.co/retry-safety/badge/resolve402-mcp.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-resolve402-mcp",
+  "verdict": "fixed"
+ },
+ {
+  "name": "Tebra MCP server",
+  "slug": "tebra-mcp-server",
+  "badge": "https://aurumflux.co/retry-safety/badge/tebra-mcp-server.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-tebra-mcp-server",
+  "verdict": "fixed"
+ },
+ {
+  "name": "stablecoin.xyz facilitator",
+  "slug": "stablecoin-xyz-facilitator",
+  "badge": "https://aurumflux.co/retry-safety/badge/stablecoin-xyz-facilitator.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-stablecoin-xyz-facilitator",
+  "verdict": "fixed"
+ },
+ {
+  "name": "inflow x402-seller",
+  "slug": "inflow-x402-seller",
+  "badge": "https://aurumflux.co/retry-safety/badge/inflow-x402-seller.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-inflow-x402-seller",
+  "verdict": "fixed"
+ },
+ {
+  "name": "KeeperHub",
+  "slug": "keeperhub",
+  "badge": "https://aurumflux.co/retry-safety/badge/keeperhub.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-keeperhub",
+  "verdict": "fixed"
+ },
+ {
+  "name": "mergewatch",
+  "slug": "mergewatch",
+  "badge": "https://aurumflux.co/retry-safety/badge/mergewatch.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-mergewatch",
+  "verdict": "fixed"
+ }
+]
