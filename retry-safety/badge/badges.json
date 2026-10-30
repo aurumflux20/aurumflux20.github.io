@@ -112,6 +112,13 @@
   "verdict": "fixed"
  },
  {
+  "name": "swarm-x402-mcp",
+  "slug": "swarm-x402-mcp",
+  "badge": "https://aurumflux.co/retry-safety/badge/swarm-x402-mcp.svg",
+  "row": "https://aurumflux.co/retry-safety/#r-swarm-x402-mcp",
+  "verdict": "fixed"
+ },
+ {
   "name": "Tebra MCP server",
   "slug": "tebra-mcp-server",
   "badge": "https://aurumflux.co/retry-safety/badge/tebra-mcp-server.svg",
