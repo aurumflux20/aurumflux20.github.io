@@ -3,7 +3,7 @@
 <h1>Issue Templates by AurumFlux</h1>
 <p class="meta">Documentation · Jira Cloud · built on Atlassian Forge</p>
 
-<p>Save an issue and its whole child tree as a template, then apply it in one click. Every apply is checked against the target project's current configuration before anything is created, and is undone whole if any step fails.</p>
+<p>Write an issue tree once as a template, then add it under any issue from that issue's ••• menu. Every apply is checked against the project's current configuration before anything is created, and is rolled back if a create fails part-way.</p>
 
 <h2>Install</h2>
 <p>Install from the Atlassian Marketplace listing. The app adds an <strong>Issue Templates</strong> page under <em>Apps</em> in your Jira site, and a project-scoped page inside each project.</p>
@@ -17,9 +17,9 @@
 <tr><td>Scope</td><td><strong>Global</strong> (every project), <strong>Project</strong> (one project, set the key below), or <strong>Personal</strong> (only you).</td></tr>
 <tr><td>Project key</td><td>Only used when scope is Project, e.g. <code>ENG</code>.</td></tr>
 <tr><td>Category</td><td>A free-text label shown next to the template, e.g. <code>Delivery</code>.</td></tr>
-<tr><td>Root issue type</td><td>The issue type of the top issue, exactly as the project names it, e.g. <code>Epic</code> or <code>Task</code>.</td></tr>
-<tr><td>Root summary</td><td>The top issue's summary. May contain variables.</td></tr>
-<tr><td>Description</td><td>Optional description for the top issue. May contain variables.</td></tr>
+<tr><td>Root issue type</td><td>The type of issue the template is added to, e.g. <code>Epic</code> or <code>Task</code>. An Epic template is applied from an Epic.</td></tr>
+<tr><td>Root summary</td><td>A name for the top of the tree. The issue you apply the template to keeps its own summary.</td></tr>
+<tr><td>Description</td><td>Optional. Filled into the issue you apply the template to, only if that issue's description is empty. May contain variables.</td></tr>
 <tr><td>Children</td><td>The tree, one issue per line. See below.</td></tr>
 <tr><td>Variables</td><td>Comma-separated names you will be asked for at apply time.</td></tr>
 </table>
@@ -38,16 +38,16 @@ Task: Ship to production</pre>
 <p>Write <code>{{name}}</code> anywhere in a summary or description, and list <code>name</code> in the Variables field. At apply time you are asked for a value for each one, and every occurrence is replaced before the issue is created.</p>
 
 <h2>Apply a template</h2>
-<p>Open the template library, choose a template, enter the target project key and any variable values, then apply. What happens, in order:</p>
+<p>Open the issue the template should go under (for an Epic template, open an Epic). Click <strong>•••</strong> (More actions) at the top right of the issue and choose <strong>Apply template</strong>. Pick the template, type any variable values as <code>name=value</code> separated by commas, e.g. <code>version=2.1, owner=Sam</code>, and click <strong>Apply</strong>. What happens, in order:</p>
 <ol>
-<li><strong>The template is checked first.</strong> The app reads the project's current issue types and create-screen fields. If the template asks for an issue type or a field the project no longer has, the whole apply is refused and it names what does not match. <em>Nothing is created.</em></li>
-<li><strong>The tree is created top down</strong>, parents before children, and each new issue key is recorded as it is made.</li>
-<li><strong>If any create fails</strong>, every issue that apply already created is deleted, children first, and the result lists what was removed. Anything that could not be removed is named rather than hidden.</li>
+<li><strong>The template is checked first.</strong> The app reads the project's current issue types and create-screen fields. If the template asks for an issue type or a field the project no longer has, if a child would sit at the wrong level, if the issue you opened is at a different level from the template's root (an Epic template opened on a Task), or if the project requires a field the template does not fill, the whole apply is refused and it names what does not match. <em>Nothing is created.</em></li>
+<li><strong>The children are created under the issue you opened</strong>, parents before children, and each new issue key is recorded as it is made. The issue you opened is never deleted or renamed.</li>
+<li><strong>If a create still fails</strong> (for example a workflow validator refuses it), every issue that apply already created is deleted, children first, and the result lists what was removed. Deleting uses your own permissions: anything you are not allowed to delete is named in the result, so an admin can remove it.</li>
 <li><strong>If you apply twice</strong>, the second attempt returns the first result instead of building a second tree. An attempt still running is reported as in flight rather than duplicated.</li>
 </ol>
 
 <h2>Editing and deleting</h2>
-<p>Use <strong>Edit</strong> in the library to change a template in place, and <strong>Delete</strong> to remove it. Deleting a template does not touch issues that were created from it. Uninstalling the app removes all of its stored data for that site.</p>
+<p>Use <strong>Edit</strong> in the library to change a template in place, and <strong>Delete</strong> to remove it. Deleting a template does not touch issues that were created from it. Uninstalling the app removes its stored data for that site, on Atlassian's Forge data-retention schedule.</p>
 
 <h2>What v1 does not do</h2>
 <ul>
@@ -58,7 +58,7 @@ Task: Ship to production</pre>
 </ul>
 
 <h2>Permissions and what Jira will still refuse</h2>
-<p>The app calls the Jira API <em>as the person applying the template</em>, with that person's permissions. If a project's permission scheme, a required custom field, or a workflow validator blocks a create, Jira refuses it and the app reports that refusal back to you and rolls the apply back. It does not work around your site's configuration.</p>
+<p>The app calls the Jira API <em>as the person applying the template</em>, with that person's permissions. A required field the template does not fill is caught before anything is created. If a project's permission scheme or a workflow validator blocks a create part-way, Jira refuses it and the app reports that refusal back to you and rolls the apply back as far as your permissions allow. It does not work around your site's configuration.</p>
 
 <h2>Data and privacy</h2>
 <p>Template definitions and a short record of each apply are held in Forge storage inside Atlassian's infrastructure. An account ID is stored only for personal-scope templates, so that only you see them. Nothing leaves Atlassian's platform. Full detail is in the <a href="/legal/privacy/">privacy policy</a>; the <a href="/legal/terms/">terms of service</a> cover the rest.</p>
