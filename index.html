@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AurumFlux — infrastructure for when software acts on the world</title>
-<meta name="description" content="Exactly-once infrastructure for AI agents. Open-source retry-safety tooling, plus compliance products. Every claim verifiable.">
+<meta name="description" content="Retry-safety infrastructure for AI agents. One execution per idempotency key when callers race, a receipt of what ran, and UNKNOWN when the provider cannot confirm. Open-source tooling, plus compliance products. Every claim verifiable.">
 <meta property="og:title" content="AurumFlux">
-<meta property="og:description" content="Infrastructure for when software acts on the world. Exactly once — with proof.">
+<meta property="og:description" content="Infrastructure for when software acts on the world. One execution per key when callers race, counted. When the provider cannot confirm, it says UNKNOWN.">
 <meta property="og:image" content="https://aurumflux20.github.io/logo.png">
 <meta name="theme-color" content="#08090b">
 <link rel="icon" type="image/png" href="logo.png">
@@ -234,7 +234,7 @@
   <div class="hero">
     <span class="eyebrow"><span class="dot"></span> Shipping in the open</span>
     <h1>Infrastructure for when software <span class="grad">acts on the world.</span></h1>
-    <p class="lede">An AI agent retries a call after a timeout. It never learns whether the first attempt landed — so the charge, the email, the write happens twice. We read the handler code of 86 MCP servers to find out how often that is really true: <strong>15 fire twice, and six of those are official vendor servers</strong>. We build the layer that makes it happen exactly once, and proves it did.</p>
+    <p class="lede">An AI agent retries a call after a timeout. It never learns whether the first attempt landed — so the charge, the email, the write happens twice. We read the handler code of 86 MCP servers to find out how often that is really true: <strong>15 fire twice, and six of those are official vendor servers</strong>. We build the layer that lets one call per idempotency key through, even with a thousand racing, and keeps a receipt of what ran. When the provider cannot say whether the first attempt landed, it reports UNKNOWN.</p>
     <div class="cta">
       <a class="btn" href="https://aurumflux20.github.io/once-kernel-ts/">Watch 1,000 agents try to double-charge</a>
       <a class="btn ghost" href="#products">Explore products</a>
@@ -246,7 +246,7 @@
     <div class="grid g4">
       <div class="stat"><b>15 of 86</b><span>MCP servers we read fire the same effect twice on a retry &mdash; six are official vendor servers</span></div>
       <div class="stat"><b>12 &rarr; 12</b><span>identical calls, twelve duplicate records &mdash; in a vendor's own server, filed publicly with the repro</span></div>
-      <div class="stat"><b>1,000 → 1</b><span>racing agents, one execution — counted, four consecutive runs</span></div>
+      <div class="stat"><b>1,000 → 1</b><span>racing callers, one execution — counted, four consecutive runs</span></div>
       <div class="stat"><b>14</b><span>bugs we found in our own code — every one published, with the failing test</span></div>
     </div>
     <p class="note">Every number here can be checked by a stranger. The duplicate-record finding is a <a href="https://github.com/mongodb-js/mongodb-mcp-server/issues/1432">public issue with a reproduction</a> on a vendor's own server; the money-path findings &mdash; including a duplicate-refund path in a payment provider's official MCP server &mdash; went to those vendors privately, because a public writeup of those is a recipe. And the failures are printed next to the successes: 84 repos we could not scan, four times our own scanner was wrong, fourteen bugs in our own code. A vendor who has never found a bug in their own system has not looked.</p>
@@ -284,7 +284,7 @@
 
       <article class="card">
         <h3>once-kernel <span class="pill live">Live</span></h3>
-        <p>The idempotency kernel. Exactly-once execution under real concurrency, receipts that prove <em>what</em> ran, and a hash-chained ledger an outsider can verify without trusting you.</p>
+        <p>The idempotency kernel. One execution per key when callers race (1,000 racers, one execution, counted in CI). Each receipt holds the hash of <em>what</em> ran, and shows when a worker died or stalled and another took over, since a takeover can run the effect again. A hash-chained ledger lets anyone check offline that no entry was edited, removed or reordered. It does not prove who wrote the entries.</p>
         <div class="install">npm i once-kernel</div>
         <div class="links">
           <a href="https://github.com/aurumflux20/once-kernel-ts">TypeScript</a>
@@ -377,7 +377,7 @@
     <div class="feature">
       <div>
         <h3>We attack our own kernel until it breaks, then publish what broke</h3>
-        <p>A thousand real processes released by one barrier at a single Postgres, where the "payment" increments a counter that cannot lie — if two callers run, the counter says two and the run fails loudly. World confirmation is measured against live Stripe test mode rather than a mock, because a mock agrees with whatever you already believe. The hostile tests are the point: forged approval tickets, replayed tickets, someone changing the amount after it was approved, someone approving their own spend, two approvers racing to be the second vote in the same millisecond.</p>
+        <p>A thousand real threads, each on its own database connection, released by one barrier at a single Postgres, where the "payment" increments a counter that cannot lie — if two callers run, the counter says two and the run fails loudly. World confirmation is measured against live Stripe test mode rather than a mock, because a mock agrees with whatever you already believe. The hostile tests are the point: forged approval tickets, replayed tickets, someone changing the amount after it was approved, someone approving their own spend, two approvers racing to be the second vote in the same millisecond.</p>
         <p>Six bugs in our own kernel were found this way and every one is written up in the open, including the two that a green test suite was hiding. Where a guarantee has a limit, the limit is printed next to it — a certificate says only what was actually proven, and "we don't know" never quietly becomes "it's fine."</p>
         <div class="links">
           <a href="https://github.com/aurumflux20/seal/blob/main/STORM-PROOF.md">What broke, and how</a>
