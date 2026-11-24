@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>From a release checklist to a Jira Epic: walkthrough | AurumFlux</title>
+<meta name="description" content="Step by step with screenshots: turn a release checklist into a reusable Jira template with Issue & Work Item Templates by AurumFlux, then create the Epic with its tasks and sub-task in a project.">
+<link rel="canonical" href="https://aurumflux.co/apps/issue-templates/walkthrough/">
+<meta name="color-scheme" content="light">
+<style>html{background:#fff}body{max-width:820px;margin:40px auto;padding:0 20px;font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#1a1a1a;background:#fff}h1{font-size:30px;margin-bottom:4px;line-height:1.25}h2{font-size:21px;margin-top:40px;border-bottom:1px solid #eee;padding-bottom:6px}code{background:#f5f5f7;border-radius:5px;padding:1px 6px;font-size:14px}.meta{color:#666;margin-top:0}a{color:#0b57d0}figure{margin:16px 0 8px}figure img{display:block;width:100%;height:auto;border:1px solid #e3e3e3;border-radius:8px}figcaption{color:#666;font-size:14px;margin-top:6px}@media(max-width:600px){figcaption::after{content:" Tap the image to enlarge it."}}.note{background:#fafafa;border-left:3px solid #ccc;padding:10px 14px;margin:24px 0}.cta{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 8px}.cta a{display:inline-block;padding:11px 18px;border-radius:8px;font-weight:600;text-decoration:none;background:#1a1a1a;color:#fff}.cta a.ghost{background:#fff;color:#1a1a1a;border:1px solid #ccc}.foot{color:#666;font-size:14px;margin-top:40px;border-top:1px solid #eee;padding-top:12px}</style></head><body>
+<p class="meta"><a href="/apps/issue-templates/">&larr; Issue Templates documentation</a></p>
+<h1>From a release checklist to a Jira Epic, step by step</h1>
+<p class="meta">Walkthrough · Jira Cloud · Issue &amp; Work Item Templates by AurumFlux</p>
+
+<p>This page shows a release checklist becoming a reusable template. Then it shows the template creating a real Epic in Jira, with its tasks and a sub-task.</p>
+<p class="note">The screenshots come from our own Jira test site, in a project called "Release Demo". They are not from a customer. They were taken on 23 November 2026 with the app version on the Atlassian Marketplace at the time (3.14.0).</p>
+
+<h2>1. Start from the release checklist example</h2>
+<p>Open <em>Apps → Issue Templates</em> in Jira. Under <strong>Start with an example</strong>, add <strong>Release checklist</strong>. It appears in your Library.</p>
+<figure><a href="1-library-examples.png" title="Open full size"><img src="1-library-examples.png" width="1456" height="835" alt="The Issue Templates page in Jira: Template health, How to use a template, a Library with Release checklist, and the Start with an example panel."></a><figcaption>The app's page in Jira. Release checklist is already in the Library.</figcaption></figure>
+
+<h2>2. Make it your checklist</h2>
+<p>Click <strong>Edit</strong>. The top issue is an Epic called <code>Release {{version}}</code>. Under it, write your checklist one item per line, as <code>Type: Summary</code>. Start a line with two spaces to put it under the line above.</p>
+<p><code>{{version}}</code> is a blank. You fill it in each time you use the template.</p>
+<figure><a href="2-edit-checklist.png" title="Open full size"><img src="2-edit-checklist.png" width="1316" height="907" alt="The template editor: top issue type Epic, top summary Release {{version}}, and four lines: Freeze code, an indented sub-task Run the regression tests, Write release notes, and Tell customers."></a><figcaption>Three tasks, and one sub-task under "Freeze code".</figcaption></figure>
+
+<h2>3. Use it in a project</h2>
+<p>Click <strong>Use</strong>, pick the project and fill in the blank. Here the project is Release Demo and the version is 4.3.</p>
+<figure><a href="3-use-pick-project.png" title="Open full size"><img src="3-use-pick-project.png" width="1568" height="475" alt="The Use form: project Release Demo (RD), version 4.3, and a Create button."></a><figcaption>One box for each blank in the template.</figcaption></figure>
+
+<h2>4. The app creates the tree</h2>
+<p>Click <strong>Create</strong>. The app creates the Epic and the issues under it, and links to the Epic.</p>
+<figure><a href="4-created.png" title="Open full size"><img src="4-created.png" width="1568" height="475" alt="A green message: Created RD-1 and 4 issue(s) under it. Open RD-1."></a><figcaption>The Epic RD-1, with 4 issues under it.</figcaption></figure>
+
+<h2>5. What you get in Jira</h2>
+<p>The Epic "Release 4.3" holds the three tasks, with 4.3 filled in.</p>
+<figure><a href="5-epic-in-jira.png" title="Open full size"><img src="5-epic-in-jira.png" width="1096" height="950" alt="Jira issue RD-1, Release 4.3, with the description Everything that has to happen before 4.3 goes out, and child work items RD-2 Freeze code for 4.3, RD-3 Write release notes for 4.3, RD-4 Tell customers about 4.3."></a><figcaption>RD-1 and its three tasks.</figcaption></figure>
+<p>The sub-task sits under "Freeze code for 4.3".</p>
+<figure><a href="6-subtask-in-jira.png" title="Open full size"><img src="6-subtask-in-jira.png" width="1096" height="750" alt="Jira issue RD-2, Freeze code for 4.3, under RD-1, with child work item RD-5 Run the regression tests."></a><figcaption>RD-2 and its sub-task, RD-5.</figcaption></figure>
+
+<h2>Already have an Epic?</h2>
+<p>Open it, click <strong>•••</strong> (More actions) at the top right and choose <strong>Apply template</strong>. The template's issues are added under that Epic.</p>
+
+<h2>Before and during an apply</h2>
+<p>Every apply is checked against the project before anything is created. If Jira still refuses a step partway through, the app removes the issues that run created where Jira permissions allow. An Epic, and any issue someone else added work under, is kept and named. Review the result for anything left. The <a href="/apps/issue-templates/">documentation</a> has the details.</p>
+
+<h2>Try it on your own checklist</h2>
+<p>Free for up to 10 users.</p>
+<div class="cta">
+  <a href="https://marketplace.atlassian.com/apps/3840219530/issue-templates-by-aurumflux">View on Atlassian Marketplace</a>
+  <a class="ghost" href="/apps/issue-templates/">Documentation</a>
+</div>
+<p class="foot">Questions: <a href="mailto:hello@aurumflux.co">hello@aurumflux.co</a> · <a href="/apps/issue-templates/epic-template-with-subtasks/">How to make a Jira Epic template with sub-tasks</a></p>
+</body></html>
