@@ -1,11 +1,11 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Issue Templates for Jira — Documentation | AurumFlux</title>
-<meta name="description" content="How to use Issue & Work Item Templates by AurumFlux in Jira Cloud: write an Epic → task → sub-task tree once, apply it from any Epic's ••• menu, fill in variables like the version, and get an automatic undo if a create fails.">
+<meta name="description" content="How to use Issue & Work Item Templates by AurumFlux in Jira Cloud: write an Epic → task → sub-task tree once, apply it from any Epic's ••• menu, fill in variables like the version. If Jira refuses a step part-way, the app removes what that apply created where Jira permissions allow and names what it kept.">
 <link rel="canonical" href="https://aurumflux.co/apps/issue-templates/">
 <style>body{max-width:820px;margin:40px auto;padding:0 20px;font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#1a1a1a}h1{font-size:30px;margin-bottom:4px}h2{font-size:21px;margin-top:36px;border-bottom:1px solid #eee;padding-bottom:6px}h3{font-size:17px;margin-top:24px}code,pre{background:#f5f5f7;border-radius:5px}code{padding:1px 6px;font-size:14px}pre{padding:14px;overflow-x:auto;font-size:14px;line-height:1.5}.meta{color:#666;margin-top:0}table{border-collapse:collapse;width:100%;margin:12px 0}th,td{border:1px solid #e3e3e3;padding:8px 10px;text-align:left;font-size:15px}th{background:#fafafa}</style></head><body>
 <h1>Issue Templates by AurumFlux</h1>
 <p class="meta">Documentation · Jira Cloud · built on Atlassian Forge</p>
 
-<p>Write an issue tree once as a template, then add it under any issue from that issue's ••• menu. Every apply is checked against the project's current configuration before anything is created, and is rolled back if a create fails part-way.</p>
+<p>Write an issue tree once as a template, then add it under any issue from that issue's ••• menu. Every apply is checked against the project's current configuration before anything is created. If Jira still refuses a create part-way, the app removes the issues that apply created where Jira permissions allow, and the result says what it removed and what it kept.</p>
 <p class="meta">Walkthrough: <a href="/apps/issue-templates/epic-template-with-subtasks/">How to make a Jira Epic template with sub-tasks</a> — Clone vs an Automation rule vs a template.</p>
 
 <h2>Install</h2>
@@ -45,7 +45,8 @@ Task: Ship to production</pre>
 <ol>
 <li><strong>The template is checked first.</strong> The app reads the project's current issue types and create-screen fields. If the template asks for an issue type or a field the project no longer has, if a child would sit at the wrong level, if the issue you opened is at a different level from the template's root (an Epic template opened on a Task), or if the project requires a field the template does not fill, the whole apply is refused and it names what does not match. <em>Nothing is created.</em></li>
 <li><strong>The children are created under the issue you opened</strong>, parents before children, and each new issue key is recorded as it is made. The issue you opened is never deleted or renamed.</li>
-<li><strong>If a create still fails</strong> (for example a workflow validator refuses it), every issue that apply already created is deleted, children first, and the result lists what was removed. Deleting uses your own permissions: anything you are not allowed to delete is named in the result, so an admin can remove it.</li>
+<li><strong>If a create still fails</strong> (for example a workflow validator refuses it), the app removes the issues that apply already created, children first, and the result lists what was removed. Some are kept on purpose and named in the result: an Epic the apply created (delete it by hand once nothing is under it), and any issue someone else has added work under, such as a sub-task. The app deletes as you; if Jira does not let you delete in that project, it removes the issues your apply made on your behalf, and nobody else's. Anything Jira still refuses is named, so an admin can remove it. Review the result for any remaining work.</li>
+<li><strong>If an apply is interrupted</strong> (for example the page is closed while it runs), nothing more is created or removed by itself. It stops where it was, and Template health on the app's page lists it so you can finish it or undo it there.</li>
 <li><strong>If you apply twice</strong>, the second attempt returns the first result instead of building a second tree. An attempt still running is reported as in flight rather than duplicated.</li>
 </ol>
 
@@ -61,11 +62,11 @@ Task: Ship to production</pre>
 </ul>
 
 <h2>Permissions and what Jira will still refuse</h2>
-<p>The app calls the Jira API <em>as the person applying the template</em>, with that person's permissions. A required field the template does not fill is caught before anything is created. If a project's permission scheme or a workflow validator blocks a create part-way, Jira refuses it and the app reports that refusal back to you and rolls the apply back as far as your permissions allow. It does not work around your site's configuration.</p>
+<p>The app calls the Jira API <em>as the person applying the template</em>, with that person's permissions. A required field the template does not fill is caught before anything is created. If a project's permission scheme or a workflow validator blocks a create part-way, Jira refuses it, the app reports that refusal back to you, and it removes what that apply created where Jira permissions allow (an Epic, and anything someone else added work under, is kept; see above). It does not work around your site's configuration.</p>
 
 <h2>Data and privacy</h2>
 <p>Template definitions and a short record of each apply are held in Forge storage inside Atlassian's infrastructure. An account ID is stored only for personal-scope templates, so that only you see them. Nothing leaves Atlassian's platform. Full detail is in the <a href="/legal/privacy/">privacy policy</a>; the <a href="/legal/terms/">terms of service</a> cover the rest.</p>
 
 <h2>Support</h2>
-<p>Email <a href="mailto:hello@aurumflux.co">hello@aurumflux.co</a>. We aim to answer within two business days. Tell us the project key, the template name, and what you expected to happen; if an apply was rolled back, the result message names every issue it removed and that message is the most useful thing to paste.</p>
+<p>Email <a href="mailto:hello@aurumflux.co">hello@aurumflux.co</a>. We aim to answer within two business days. Tell us the project key, the template name, and what you expected to happen; if an apply stopped part-way, the result message names every issue it removed and every issue it kept, and that message is the most useful thing to paste.</p>
 </body></html>

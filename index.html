@@ -57,7 +57,8 @@
   .nav-links{display:flex;gap:30px;font-size:14.5px;color:var(--dim)}
   .nav-links a{transition:color .18s}
   .nav-links a:hover{color:var(--fg)}
-  @media(max-width:720px){.nav-links{display:none}}
+  .nav-jira-m{display:none;font-size:14.5px;color:var(--dim);padding:8px 0}
+  @media(max-width:720px){.nav-links{display:none}.nav-jira-m{display:block}}
 
   /* ── hero ──────────────────────────────────────── */
   .hero{padding:118px 0 96px;max-width:900px}
@@ -138,6 +139,10 @@
     background:rgba(0,0,0,.4);border:1px solid var(--line);border-radius:9px;
     padding:10px 13px;margin-bottom:16px;overflow-x:auto;white-space:nowrap;
   }
+  #jira-app{scroll-margin-top:90px}
+  #jira-app .install{white-space:normal}
+  .card-cta{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+  .card-cta .btn{padding:11px 18px;font-size:14px}
   .links{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;color:var(--dim);margin-top:auto}
   .links a{color:var(--dim);transition:color .18s;display:inline-flex;align-items:center;gap:5px}
   .links a:hover{color:var(--gold-2)}
@@ -226,6 +231,7 @@
       <a href="#building">Building</a>
       <a href="#contact">Contact</a>
     </div>
+    <a class="nav-jira-m" href="#jira-app">Jira app</a>
   </div>
 </nav>
 
@@ -238,6 +244,7 @@
     <div class="cta">
       <a class="btn" href="https://aurumflux20.github.io/once-kernel-ts/">Watch 1,000 agents try to double-charge</a>
       <a class="btn ghost" href="#products">Explore products</a>
+      <a class="btn ghost" href="#jira-app">Explore the Jira app</a>
     </div>
     <p class="note" style="margin-top:14px"><strong>Start here</strong> if you only want to stop double-charging customers on retries: <code>npx effectfence probe --calls 12</code> against a server you already run &mdash; it fires the ambiguous failures on purpose and counts how many times you actually paid for one purchase. One is safe; two is the bug. Building the payment path yourself? Start with <a href="https://github.com/aurumflux20/seal">seal</a>. <strong>Rails:</strong> none of this is Stripe-specific &mdash; the primitives sit between the agent and any irreversible call. Field work to date: x402 (USDC on Base, Solana, Stellar, and EVM facilitators), Stripe, and plain HTTP settlement.</p>
   </div>
@@ -263,11 +270,13 @@
 
       <article class="card" id="jira-app">
         <h3>Issue &amp; Work Item Templates for Jira <span class="pill live">Live</span></h3>
-        <p>A Jira Cloud app. Save an Epic with its tasks and subtasks once, then create the whole work item tree in any project, with blanks like the version filled in. Every apply is checked against the project first, and if any step fails the whole tree is undone, so nothing is left half-made.</p>
+        <p>Turn a repeatable release checklist or onboarding plan into a Jira Epic with its tasks and subtasks. Save the tree once, then create it in any project, with blanks like the version filled in. Every apply is checked against the project first. If Jira refuses a step partway through, the app removes the issues that run created where Jira permissions allow; an Epic, and any issue someone else added work under, is kept. Review the result for anything left.</p>
         <div class="install">Atlassian Marketplace &middot; free for up to 10 users</div>
+        <div class="card-cta">
+          <a class="btn" href="https://marketplace.atlassian.com/apps/3840219530/issue-templates-by-aurumflux">View on Atlassian Marketplace</a>
+          <a class="btn ghost" href="/apps/issue-templates/">Documentation</a>
+        </div>
         <div class="links">
-          <a href="https://marketplace.atlassian.com/apps/3840219530/issue-templates-by-aurumflux">Marketplace</a>
-          <a href="/apps/issue-templates/">Docs</a>
           <a href="/apps/issue-templates/epic-template-with-subtasks/">How to make an Epic template</a>
         </div>
       </article>
